@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>校集 · 400×851 固定视口预览</title>
+<style>
+  :root{
+    --bg:#eef1f6;--card:#fff;--ink:#1f2329;--ink2:#4e5969;--ink3:#86909c;
+    --line:#dde1e8;--brand:#2f6bff;--brand-weak:#eaf0ff;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font:13px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    display:flex;flex-direction:column;overflow:hidden;
+  }
+
+  /* ---------- 工具栏 ---------- */
+  .toolbar{
+    flex:0 0 auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    padding:10px 16px;background:#fff;border-bottom:1px solid var(--line);
+    position:relative;z-index:5;
+  }
+  .brand{font-size:14px;font-weight:700;margin-right:2px}
+  .spec{
+    font-size:11.5px;color:var(--ink3);background:#f4f6f9;border:1px solid var(--line);
+    padding:2px 9px;border-radius:999px;font-variant-numeric:tabular-nums;
+  }
+  .pages{display:flex;gap:6px;flex-wrap:wrap;margin-left:4px}
+  .pbtn{
+    border:1px solid var(--line);background:#fff;color:var(--ink2);
+    font:inherit;font-size:12.5px;padding:5px 11px;border-radius:8px;cursor:pointer;
+    transition:.14s;
+  }
+  .pbtn:hover{border-color:#bcd0ff;color:var(--brand)}
+  .pbtn.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+  .spacer{flex:1}
+  .tools{display:flex;gap:8px;align-items:center}
+  .tbtn{
+    border:1px solid var(--line);background:#fff;color:var(--ink2);
+    font:inherit;font-size:12.5px;padding:5px 11px;border-radius:8px;cursor:pointer;
+  }
+  .tbtn:hover{border-color:#bcd0ff;color:var(--brand)}
+  .zoom{font-size:12px;color:var(--ink3);min-width:44px;text-align:right;font-variant-numeric:tabular-nums}
+
+  /* ---------- 固定视口舞台 ---------- */
+  .stage{
+    flex:1;min-height:0;display:flex;align-items:flex-start;justify-content:center;
+    padding:22px 0 0;overflow:auto;
+  }
+  .wrap{position:relative}
+  .viewport{
+    width:400px;height:851px;background:#fff;
+    box-shadow:0 16px 44px rgba(15,23,42,.16),0 0 0 1px rgba(15,23,42,.08);
+    transform-origin:top left;overflow:hidden;
+  }
+  .viewport iframe{width:400px;height:851px;border:0;display:block;background:#fff}
+
+  .stage-note{
+    position:fixed;left:0;right:0;bottom:0;padding:7px 16px;
+    background:rgba(255,255,255,.9);border-top:1px solid var(--line);
+    font-size:11.5px;color:var(--ink3);text-align:center;
+  }
+  .stage-note b{color:var(--ink2)}
+
+  @media (max-width:720px){
+    .toolbar{padding:8px 10px;gap:7px}
+    .brand,.spec{display:none}
+    .stage{padding-top:10px}
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <span class="brand">校集 · 固定视口预览</span>
+  <span class="spec" id="spec">400 × 851</span>
+  <nav class="pages" id="pages">
+    <button class="pbtn on" data-p="pages/home.html">首页</button>
+    <button class="pbtn" data-p="pages/detail.html?id=1">详情</button>
+    <button class="pbtn" data-p="pages/publish.html">发布</button>
+    <button class="pbtn" data-p="pages/messages.html">消息</button>
+    <button class="pbtn" data-p="pages/chat.html?id=101">聊天</button>
+    <button class="pbtn" data-p="pages/mine.html">我的</button>
+    <button class="pbtn" data-p="pages/orders.html">订单</button>
+    <button class="pbtn" data-p="pages/order-detail.html?id=9001">订单详情</button>
+    <button class="pbtn" data-p="pages/verify.html">认证</button>
+  </nav>
+  <span class="spacer"></span>
+  <div class="tools">
+    <span class="zoom" id="zoom">100%</span>
+    <button class="tbtn" id="reload">重新加载</button>
+    <button class="tbtn" id="opennew">新窗口打开</button>
+  </div>
+</div>
+
+<div class="stage" id="stage">
+  <div class="wrap" id="wrap">
+    <div class="viewport" id="viewport">
+      <iframe id="frame" src="pages/home.html" title="校集页面预览"></iframe>
+    </div>
+  </div>
+</div>
+
+<div class="stage-note">
+  固定 <b>400 × 851</b>（与参考图一致）｜ 直接在里面点击即可跳转，链接都在框内打开 ｜ 缩放自动适配窗口大小
+</div>
+
+<script>
+  const wrap = document.getElementById('wrap');
+  const viewport = document.getElementById('viewport');
+  const frame = document.getElementById('frame');
+  const zoomEl = document.getElementById('zoom');
+  const stage = document.getElementById('stage');
+
+  const W = 400, H = 851;
+
+  /* 缩放到刚好放得下：不放大，只缩小 */
+  function fit() {
+    const availW = stage.clientWidth - 40;
+    const availH = stage.clientHeight - 42;
+    const s = Math.min(1, availW / W, availH / H);
+    viewport.style.transform = `scale(${s})`;
+    wrap.style.width = (W * s) + 'px';
+    wrap.style.height = (H * s) + 'px';
+    zoomEl.textContent = Math.round(s * 100) + '%';
+  }
+  window.addEventListener('resize', fit);
+  fit();
+
+  /* 页面切换 */
+  document.getElementById('pages').addEventListener('click', e => {
+    const b = e.target.closest('.pbtn');
+    if (!b) return;
+    document.querySelectorAll('.pbtn').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    frame.src = b.dataset.p;
+    frame.onload = () => { try { frame.contentWindow.scrollTo(0, 0); } catch (_) {} };
+  });
+
+  /* 重新加载当前页 */
+  document.getElementById('reload').addEventListener('click', () => {
+    frame.src = frame.src.split('#')[0];
+  });
+
+  /* 新窗口打开当前页 */
+  document.getElementById('opennew').addEventListener('click', () => {
+    window.open(frame.getAttribute('src'), '_blank');
+  });
+
+  /* iframe 内部跳转时，同步 toolbar 的选中态 */
+  frame.addEventListener('load', () => {
+    try {
+      const p = frame.contentWindow.location.pathname.split('/').pop();
+      document.querySelectorAll('.pbtn').forEach(b => {
+        const target = (b.dataset.p || '').split('/').pop().split('?')[0];
+        b.classList.toggle('on', target === p);
+      });
+    } catch (_) { /* file:// 下跨域读不到，忽略 */ }
+  });
+</script>
+</body>
+</html>

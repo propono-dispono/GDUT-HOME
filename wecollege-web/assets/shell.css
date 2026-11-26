@@ -1,0 +1,266 @@
+/* ============================================================
+   WeCollege 原版 Web 复刻 · 页面外壳
+   容器宽度 = 750rpx 基准，配合 wx.css 里的 cqw 单位等比缩放
+   ============================================================ */
+*{ box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: #e9ebef;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+/* 手机容器：也是 cqw 的容器，内容按 750rpx 等比缩放 */
+.app {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  min-height: 100vh;
+  background: #f8f8f8;
+  container-type: inline-size;
+  overflow-x: hidden;
+  padding-bottom: 118px;
+}
+
+/* ---------- 原生导航栏 ---------- */
+.navbar {
+  position: sticky; top: 0; z-index: 60;
+  height: 46px;
+  background: #636DEA;
+  color: #fff;
+  display: flex; align-items: center;
+  padding: 0 10px;
+}
+.navbar .nb-title {
+  position: absolute; left: 0; right: 0; text-align: center;
+  font-size: 16px; font-weight: 500; pointer-events: none;
+}
+.navbar .nb-back {
+  position: relative; z-index: 2;
+  width: 30px; height: 30px; display: grid; place-items: center;
+  color: #fff; text-decoration: none; font-size: 20px; line-height: 1;
+}
+.navbar .nb-right {
+  margin-left: auto; position: relative; z-index: 2;
+  font-size: 13px; color: #fff;
+}
+
+/* ---------- 底部 Tab ---------- */
+.tabbar {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 400px; z-index: 70;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  background: #fff; border-top: 1px solid #ededed;
+  padding: 5px 0 calc(5px + env(safe-area-inset-bottom));
+}
+.tabbar a {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  text-decoration: none; color: #999; font-size: 11px;
+}
+.tabbar img { width: 24px; height: 24px; display: block; }
+.tabbar a.on { color: #636DEA; }
+
+/* ---------- 页面通用 ---------- */
+.page { padding-bottom: 20px; }
+.fab-wrap { position: fixed; left: 50%; transform: translateX(-50%); width: 100%; max-width: 400px; bottom: 76px; z-index: 65; pointer-events: none; }
+.fab-wrap .post { pointer-events: auto; left: 0; right: 0; }
+
+/* 让 <a> 当卡片用时不带下划线 */
+a.item, a.card, a.cell-link { text-decoration: none; color: inherit; display: block; }
+
+/* 图片模式：原版 mode=aspectFill */
+img.fill { object-fit: cover; }
+img.fit { object-fit: contain; }
+
+/* 详情/表单补充 */
+.kv-row { display: flex; padding: calc(0.133333cqw * 24) calc(0.133333cqw * 30); border-bottom: 1px solid #f0f0f0; background: #fff; }
+.kv-row .k { width: calc(0.133333cqw * 160); color: #888; font-size: calc(0.133333cqw * 28); }
+.kv-row .v { flex: 1; color: #333; font-size: calc(0.133333cqw * 28); }
+.detail-body { background: #fff; padding: calc(0.133333cqw * 30); font-size: calc(0.133333cqw * 30); line-height: 1.7; color: #333; white-space: pre-wrap; }
+.form-wrap { background: #fff; margin: calc(0.133333cqw * 20); border-radius: calc(0.133333cqw * 20); padding: 0 calc(0.133333cqw * 30); }
+.form-row { padding: calc(0.133333cqw * 28) 0; border-bottom: 1px solid #f2f2f2; }
+.form-row:last-child { border-bottom: 0; }
+.form-row .fl { font-size: calc(0.133333cqw * 28); color: #666; margin-bottom: calc(0.133333cqw * 12); }
+.form-row input, .form-row textarea, .form-row select {
+  width: 100%; border: 0; outline: 0; background: transparent;
+  font-size: calc(0.133333cqw * 30); color: #333; font-family: inherit;
+}
+.form-row textarea { min-height: calc(0.133333cqw * 200); resize: none; }
+.btn-submit { display: block; width: calc(100% - calc(0.133333cqw * 60)); margin: calc(0.133333cqw * 40) auto; border: 0;
+  height: calc(0.133333cqw * 88); border-radius: calc(0.133333cqw * 44);
+  background: #636DEA; color: #fff; font-size: calc(0.133333cqw * 32); }
+.tip-bar { margin: calc(0.133333cqw * 20); padding: calc(0.133333cqw * 20);
+  background: #fff8e6; border: 1px solid #f2d7a6; border-radius: calc(0.133333cqw * 12);
+  color: #8a5a10; font-size: calc(0.133333cqw * 24); }
+
+/* 原版悬浮按钮（小程序里 left:30rpx 会溢出，Web 里居中处理） */
+.post {
+  position: fixed !important;
+  left: 50% !important;
+  transform: translateX(-50%);
+  bottom: 30px;
+  width: auto !important;
+  z-index: 66;
+}
+.post > div { white-space: nowrap; }
+
+/* 统计行均分（原版 3 项时右侧会留空，这里让它们铺满） */
+.list .bottom .info > div { flex: 1; width: auto; }
+
+/* 图片占位（原版图片来自云存储，仓库内无素材） */
+.ph-img {
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, #eef1f8, #e3e9f6);
+}
+
+a { color: inherit; text-decoration: none; }
+
+
+/* ============================================================
+   补齐原版缺失组件
+   ============================================================ */
+
+/* 微信胶囊（原版右上角 ••• ⊙，仅视觉还原） */
+.capsule {
+  margin-left: auto; position: relative; z-index: 2;
+  display: flex; align-items: center; gap: 1px;
+  height: 32px; padding: 0 6px;
+  border: 1px solid rgba(255,255,255,.45);
+  border-radius: 16px; background: rgba(255,255,255,.16);
+}
+.capsule i { width: 20px; height: 20px; display: grid; place-items: center; font-style: normal; font-size: 11px; color: #fff; }
+.capsule .sep { width: 1px; height: 14px; background: rgba(255,255,255,.45); }
+
+/* 筛选标签栏（原版 .tabs：高 80rpx，字号 28rpx，当前项加粗 + 6rpx 下划线） */
+.filter-tabs {
+  display: flex; align-items: center;
+  height: calc(0.133333cqw * 80);
+  padding: 0 calc(0.133333cqw * 25);
+  background: #fff;
+  overflow-x: auto; white-space: nowrap;
+  scrollbar-width: none;
+}
+.filter-tabs::-webkit-scrollbar { display: none; }
+.ft-item {
+  position: relative; flex: 0 0 auto;
+  margin-right: calc(0.133333cqw * 46);
+  font-size: calc(0.133333cqw * 28);
+  color: #000; line-height: calc(0.133333cqw * 80);
+  cursor: pointer;
+}
+.ft-item.on { font-weight: bold; color: #636DEA; }
+.ft-item.on::after {
+  content: ""; position: absolute; left: 50%; bottom: 0;
+  width: 50%; height: calc(0.133333cqw * 6);
+  border-radius: calc(0.133333cqw * 2);
+  background: #636DEA; transform: translateX(-50%);
+}
+.ft-cate { display: flex; align-items: center; gap: calc(0.133333cqw * 6); color: #333; }
+.ft-cate .caret { font-size: calc(0.133333cqw * 20); color: #999; }
+
+/* 回到顶部（原版右下圆形按钮） */
+.back-top {
+  position: fixed; z-index: 68;
+  right: calc(50% - 200px + 16px);
+  bottom: 96px;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(255,255,255,.94);
+  box-shadow: 0 2px 8px rgba(0,0,0,.14);
+  display: flex; align-items: center; justify-content: center;
+  color: #666; font-size: 16px; cursor: pointer;
+  user-select: none;
+}
+
+/* 图片 / 头像占位（原版素材在云存储，仓库无图） */
+.avatar-ph {
+  background: linear-gradient(135deg, #e8ecf6, #d7dff0);
+}
+.ph-img { background: linear-gradient(135deg, #eef1f8, #e2e8f4); }
+.ph-1 { background: linear-gradient(135deg, #eef1f8, #dfe6f3); }
+.ph-2 { background: linear-gradient(135deg, #f0eee9, #e4e0d8); }
+.ph-3 { background: linear-gradient(135deg, #eaf1ee, #dde8e3); }
+.ph-4 { background: linear-gradient(135deg, #f2edf0, #e6dde3); }
+
+/* 表白墙配图：原版 img1 = 230rpx 方图 */
+.board-pic {
+  width: calc(0.133333cqw * 230);
+  height: calc(0.133333cqw * 230);
+  border-radius: calc(0.133333cqw * 10);
+  margin-top: calc(0.133333cqw * 20);
+}
+/* 失物图片网格：原版 120rpx 方图 */
+.grid-img {
+  width: calc(0.133333cqw * 120);
+  height: calc(0.133333cqw * 120);
+  border-radius: calc(0.133333cqw * 10);
+  margin: calc(0.133333cqw * 20) calc(0.133333cqw * 10) 0 0;
+}
+/* 闲置缩略图：原版 .right = 240rpx × 170rpx */
+.leave-thumb { width: 100%; height: 100%; }
+
+/* 公告列表：左图 + 标题 + 摘要 + 日期 */
+.list .item.news-item {
+  display: flex; gap: calc(0.133333cqw * 22);
+  padding: calc(0.133333cqw * 24) calc(0.133333cqw * 22);
+  background: #fff; border-radius: calc(0.133333cqw * 10);
+  margin-bottom: calc(0.133333cqw * 20);
+}
+.news-thumb {
+  flex: 0 0 calc(0.133333cqw * 210);
+  height: calc(0.133333cqw * 150);
+  border-radius: calc(0.133333cqw * 8);
+}
+.news-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.news-title {
+  font-size: calc(0.133333cqw * 30); color: #222; font-weight: 600; line-height: 1.45;
+  display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;
+}
+.news-excerpt {
+  margin-top: calc(0.133333cqw * 10);
+  font-size: calc(0.133333cqw * 24); color: #999; line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.news-date { margin-top: auto; text-align: right; font-size: calc(0.133333cqw * 22); color: #bbb; }
+
+/* 搜索栏（原版 cmpt-comm-list 顶部：输入框 + 我的按钮） */
+.search-bar {
+  display: flex; align-items: center; gap: calc(0.133333cqw * 16);
+  padding: calc(0.133333cqw * 22) calc(0.133333cqw * 25);
+  background: #fff;
+}
+.sb-input {
+  flex: 1; min-width: 0;
+  height: calc(0.133333cqw * 68);
+  background: #f6f7fb; border-radius: calc(0.133333cqw * 40);
+  display: flex; align-items: center;
+  padding: 0 calc(0.133333cqw * 26);
+  color: #9aa0a6; font-size: calc(0.133333cqw * 26);
+}
+.sb-input input {
+  flex: 1; min-width: 0; margin-left: calc(0.133333cqw * 10);
+  border: 0; outline: 0; background: transparent;
+  font-size: calc(0.133333cqw * 26); color: #333; font-family: inherit;
+}
+.sb-mine {
+  flex: 0 0 auto;
+  height: calc(0.133333cqw * 68);
+  padding: 0 calc(0.133333cqw * 26);
+  border-radius: calc(0.133333cqw * 40);
+  background: #636DEA; color: #fff;
+  display: flex; align-items: center; gap: calc(0.133333cqw * 6);
+  font-size: calc(0.133333cqw * 26);
+}
+
+/* 失物「失/拾」标签：原版是行内 text，必须 inline-block 否则会拉满整行 */
+.list .right .title .name .type {
+  display: inline-block;
+  white-space: nowrap;
+  vertical-align: middle;
+  margin-right: calc(0.133333cqw * 10);
+}
+
+/* 底部统计：日期不能换行，且给更多宽度（原版 4 项各 25%，日期刚好一行） */
+.list .bottom .info > div { white-space: nowrap; }
+.list .bottom .info > div:first-child { flex: 1.8; }

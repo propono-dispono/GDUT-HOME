@@ -1,0 +1,41 @@
+/* 他人主页 · 公开资料摘要 */
+
+.user-extra {
+  padding: 0 var(--gutter) var(--s4);
+}
+
+.user-meta {
+  font-size: var(--fs-12);
+}
+
+.user-bio {
+  margin-top: 8rpx;
+  font-size: var(--fs-13);
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+
+.user-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+  margin-top: 12rpx;
+}
+
+.user-line {
+  display: flex;
+  gap: var(--s2);
+  margin-top: 10rpx;
+  font-size: var(--fs-12);
+}
+
+.user-line-k {
+  flex: 0 0 auto;
+  color: var(--ink-4);
+}
+
+.user-line-v {
+  flex: 1;
+  min-width: 0;
+  color: var(--ink-2);
+}

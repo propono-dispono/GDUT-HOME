@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>发布 · 校园生活圈</title>
+<link rel="stylesheet" href="assets/wx-base.css">
+<link rel="stylesheet" href="assets/shell.css">
+</head>
+<body>
+<div class="app">
+  <header class="navbar">
+    <a class="nb-back" href="javascript:history.back()">‹</a>
+    <span class="nb-title" id="title">发布</span>
+    <span class="nb-right">提交</span>
+  </header>
+
+  <div class="page">
+    <div class="tip-bar">发布后需经后台审核才会展示（原版走 <b>board/add</b> 等云函数接口）。</div>
+    <div class="form-wrap" id="form"></div>
+    <button class="btn-submit" onclick="alert('演示页面：提交到后端接口（原版为云函数）')">提交</button>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script>
+  const type = qs('type') || 'board';
+  const CFG = {
+    board: { t: '写表白', rows: [['TO（表白对象）', 'input', '例如：图书馆三楼靠窗的同学'], ['表白内容', 'textarea', '想说的话…'], ['署名（可留空）', 'input', '例如：同层自习的人']] },
+    lost:  { t: '发布失物招领', rows: [['类型', 'select', ['寻物启事（我丢了）', '拾物招领（我捡到）']], ['物品名称', 'input', '例如：黑色长柄雨伞'], ['地点', 'input', '例如：图书馆 3 楼自习区'], ['描述', 'textarea', '补充特征、联系方式获取方式…']] },
+    job:   { t: '发布新职位', rows: [['职位名称', 'input', '例如：图书馆整理图书'], ['工作地点', 'input', '例如：校图书馆 2 楼'], ['工资待遇', 'input', '例如：15 元/小时'], ['工作描述', 'textarea', '工作时间、要求…']] },
+    leave: { t: '发布闲置', rows: [['物品名称', 'input', '例如：高等数学 同济第七版'], ['分类', 'select', ['教材', '数码', '生活用品', '服饰', '运动器材']], ['价格（元）', 'input', '0.00'], ['描述', 'textarea', '成色、交易方式…']] }
+  };
+  const cfg = CFG[type] || CFG.board;
+  $('#title').textContent = cfg.t;
+
+  $('#form').innerHTML = cfg.rows.map(([label, kind, hint]) => {
+    let ctrl = '';
+    if (kind === 'textarea') ctrl = `<textarea placeholder="${hint}"></textarea>`;
+    else if (kind === 'select') ctrl = `<select>${hint.map(o => `<option>${o}</option>`).join('')}</select>`;
+    else ctrl = `<input placeholder="${hint}">`;
+    return `<div class="form-row"><div class="fl">${label}</div>${ctrl}</div>`;
+  }).join('');
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!-- 底部导航：原型是「中间凸起 FAB」的 5 项自定义底栏，原生 tabBar 做不出凸起，所以自己画 -->
+<template name="tabbar">
+  <view class="tabbar">
+    <view class="tabitem {{active === 'home' ? 'tabitem--on' : ''}}" data-k="home" bindtap="onTab">
+      <view class="tab-icwrap"><view class="ic ic-i-home"></view></view>
+      <view class="tab-label">首页</view>
+    </view>
+
+    <view class="tabitem {{active === 'category' ? 'tabitem--on' : ''}}" data-k="category" bindtap="onTab">
+      <view class="tab-icwrap"><view class="ic ic-i-grid"></view></view>
+      <view class="tab-label">分类</view>
+    </view>
+
+    <view class="tabitem tabitem--fab {{active === 'publish' ? 'tabitem--on' : ''}}" hover-class="is-press" data-k="publish" bindtap="onTab">
+      <view class="fab"><view class="ic ic-i-plus"></view></view>
+      <view class="tab-label">发布</view>
+    </view>
+
+    <view class="tabitem {{active === 'messages' ? 'tabitem--on' : ''}}" data-k="messages" bindtap="onTab">
+      <view class="tab-icwrap">
+        <view class="ic ic-i-chat"></view>
+        <view class="badge-dot" wx:if="{{unread > 0}}"></view>
+      </view>
+      <view class="tab-label">消息</view>
+    </view>
+
+    <view class="tabitem {{active === 'mine' ? 'tabitem--on' : ''}}" data-k="mine" bindtap="onTab">
+      <view class="tab-icwrap"><view class="ic ic-i-user"></view></view>
+      <view class="tab-label">我的</view>
+    </view>
+  </view>
+</template>

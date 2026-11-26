@@ -1,0 +1,87 @@
+<!-- 私信会话 —— 页面结构 -->
+<view class="app">
+
+  <view class="appbar" style="height:{{appbarH}}px;padding-top:{{safeTop}}px;padding-right:{{capsuleRight}}px">
+    <view class="iconbtn" hover-class="iconbtn-hv" bindtap="onBack">
+      <view class="ic ic-i-back"></view>
+    </view>
+    <text class="appbar-title">{{peerName || '私信'}}</text>
+  </view>
+
+  <!-- 引用卡：从内容详情发起的会话，聊天时始终能看到在聊哪一条 -->
+  <view wx:if="{{refPost}}" class="chat-ref" hover-class="rowlink-hv" bindtap="onRefTap">
+    <image wx:if="{{refPost.cover}}" class="chat-ref-cover" src="{{refPost.cover}}" mode="aspectFill"></image>
+    <view wx:else class="chat-ref-cover chat-ref-cover--ph"><view class="ic ic-i-inbox"></view></view>
+    <view class="grow">
+      <view class="chat-ref-title ellipsis">{{refPost.title}}</view>
+      <view class="chat-ref-sub">{{refPost.price !== '' && refPost.price !== null ? '¥' + refPost.price : '校园互助'}}</view>
+    </view>
+    <text class="chat-ref-arrow">›</text>
+  </view>
+
+  <scroll-view
+    class="app-main"
+    scroll-y
+    enable-flex
+    scroll-into-view="{{scrollTo}}"
+    scroll-with-animation
+  >
+    <view wx:if="{{loading}}" class="empty"><view class="empty-title">加载中…</view></view>
+
+    <block wx:elif="{{messages.length}}">
+      <view class="chat-msgs">
+        <view
+          class="chat-row {{m.mine ? 'chat-row--mine' : ''}}"
+          wx:for="{{messages}}"
+          wx:for-item="m"
+          wx:key="id"
+          id="m{{m.id}}"
+        >
+          <image
+            wx:if="{{m.fromAvatar}}"
+            class="chat-avatar"
+            src="{{m.fromAvatar}}"
+            mode="aspectFill"
+            data-uid="{{m.fromUserId}}"
+            bindtap="onAvatarTap"
+          ></image>
+          <image
+            wx:else
+            class="chat-avatar"
+            src="{{m.defaultAvatar}}"
+            mode="aspectFill"
+            data-uid="{{m.fromUserId}}"
+            bindtap="onAvatarTap"
+          ></image>
+
+          <view class="chat-main">
+            <view class="chat-bubble {{m.mine ? 'chat-bubble--mine' : ''}}">{{m.content}}</view>
+            <view class="chat-time">{{m.createdAt}}</view>
+          </view>
+        </view>
+        <view id="chatBottom" style="height:12rpx"></view>
+      </view>
+    </block>
+
+    <view wx:else class="empty">
+      <view class="empty-ico"><view class="ic ic-i-chat ic--lg"></view></view>
+      <view class="empty-title">还没有消息</view>
+      <view class="empty-desc">打个招呼吧</view>
+    </view>
+  </scroll-view>
+
+  <view class="chat-inputbar" style="padding-bottom:{{safeBottom}}px">
+    <input
+      class="chat-input"
+      value="{{draft}}"
+      placeholder="说点什么…"
+      placeholder-class="ph"
+      confirm-type="send"
+      adjust-position
+      bindinput="onDraft"
+      bindconfirm="onSend"
+    />
+    <view class="chat-send {{draft ? '' : 'chat-send--off'}}" bindtap="onSend">发送</view>
+  </view>
+
+</view>

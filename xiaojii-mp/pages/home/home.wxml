@@ -1,0 +1,139 @@
+<!-- home页 —— 页面结构 -->
+<import src="../../templates/card.wxml" />
+<import src="../../templates/tabbar.wxml" />
+
+<view class="app">
+
+  <view class="appbar appbar--plain" style="height:{{appbarH}}px;padding-top:{{safeTop}}px;padding-right:{{capsuleRight}}px">
+    <!-- ⛔ 品牌字样：冷启动首次进入时播「描边生长 → 金属扫光」，见 app.wxss 的 brandStroke/brandSheen -->
+    <text class="appbar-title brand brand--cycle">GDUT-HOME</text>
+    <view class="appbar-spacer"></view>
+    <view class="iconbtn iconbtn--right" hover-class="iconbtn-hv" bindtap="onBell">
+      <view class="ic ic-i-bell"></view>
+    </view>
+  </view>
+
+  <scroll-view class="app-main" scroll-y enable-flex>
+
+    <!-- ⛔ 勿删：首页公告 / 课表提示 双屏轮播（4s 自动切换，可点） -->
+    <swiper
+      wx:if="{{announce}}"
+      class="announce-swiper"
+      autoplay
+      circular
+      vertical
+      interval="4000"
+      duration="400"
+    >
+      <swiper-item>
+        <view class="announce" hover-class="rowlink-hv" bindtap="onAnnounce">
+          <text class="announce-tag">公告</text>
+          <text class="announce-text">{{announce.title}}</text>
+          <text class="announce-arrow">›</text>
+        </view>
+      </swiper-item>
+      <swiper-item>
+        <view class="announce" hover-class="rowlink-hv" bindtap="onEduTip">
+          <text class="announce-tag announce-tag--edu">课表</text>
+          <text class="announce-text">下滑查看今日课程与成绩</text>
+          <text class="announce-arrow">↓</text>
+        </view>
+      </swiper-item>
+    </swiper>
+
+    <view
+      wx:else
+      class="announce"
+      hover-class="rowlink-hv"
+      bindtap="onEduTip"
+    >
+      <text class="announce-tag announce-tag--edu">课表</text>
+      <text class="announce-text">下滑查看今日课程与成绩</text>
+      <text class="announce-arrow">↓</text>
+    </view>
+
+    <view class="search {{searchFocus ? 'search--focus' : ''}}">
+      <view class="ic ic-i-search ic--sm"></view>
+      <input
+        value="{{keyword}}"
+        bindfocus="onSearchFocus"
+        bindblur="onSearchBlur"
+        placeholder="搜教材、鼠标、代取快递…"
+        placeholder-class="ph"
+        confirm-type="search"
+        bindinput="onKeyword"
+        bindconfirm="onSearchConfirm"
+      />
+      <view wx:if="{{keyword}}" class="ic ic-i-close ic--sm" bindtap="onClearKeyword"></view>
+    </view>
+
+    <!-- 今日课程：整卡可点，点击直接进课表（⛔ 勿再加独立「全部课表」入口） -->
+    <view class="today" hover-class="today-hv" bindtap="onEduTip">
+      <view class="today-head">
+        <text class="today-title">今日课程</text>
+        <text class="today-date">{{todayText}}</text>
+        <view class="grow"></view>
+        <text class="today-arrow">›</text>
+      </view>
+
+      <view wx:if="{{todayLoading}}" class="today-hint">正在读取课表…</view>
+      <view wx:elif="{{todayHint}}" class="today-hint">{{todayHint}}</view>
+      <view wx:else class="today-list">
+        <view class="today-item" wx:for="{{todayCourses}}" wx:key="id">
+          <view class="today-time">{{item.periodText}}</view>
+          <view class="today-body">
+            <view class="today-name">{{item.name}}</view>
+            <view class="today-meta">{{item.metaText}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 六条业务线金刚区 -->
+    <view class="bizgrid">
+      <view
+        class="bizitem"
+        wx:for="{{bizList}}"
+        wx:key="k"
+        hover-class="bizitem-hv"
+        data-k="{{item.k}}"
+        bindtap="onBiz"
+      >
+        <view class="ic ic-{{item.icon}}"></view>
+        <text>{{item.short}}</text>
+      </view>
+    </view>
+
+    <!-- 业务线筛选 -->
+    <view class="chips">
+      <view class="chip {{activeBiz === 'ALL' ? 'chip--on' : ''}}" data-k="ALL" bindtap="onChip">全部</view>
+      <view
+        class="chip {{activeBiz === item.k ? 'chip--on' : ''}}"
+        wx:for="{{bizList}}"
+        wx:key="k"
+        data-k="{{item.k}}"
+        bindtap="onChip"
+      >{{item.short}}</view>
+    </view>
+
+    <view class="feed">
+      <block wx:if="{{list.length > 0}}">
+        <template is="card" wx:for="{{list}}" wx:key="id" data="{{item: item}}" />
+      </block>
+
+      <view class="empty" wx:elif="{{loading}}">
+        <view class="empty-title">加载中…</view>
+      </view>
+
+      <view class="empty" wx:else>
+        <view class="empty-ico"><view class="ic ic-i-inbox ic--lg"></view></view>
+        <view class="empty-title">{{errMsg || '没有找到相关内容'}}</view>
+        <view class="empty-desc">{{errMsg ? '请确认后端 8080 已启动' : '换个关键词，或者去发布一条'}}</view>
+        <view class="btn btn--primary btn--sm mt-4" bindtap="onRetry">重试</view>
+      </view>
+    </view>
+
+  </scroll-view>
+
+  <template is="tabbar" data="{{active: 'home', unread: unreadCount}}" />
+</view>

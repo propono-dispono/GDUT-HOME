@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>我的订单 · 校集</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="appbar">
+    <a class="iconbtn" href="javascript:history.back()" aria-label="返回">
+      <svg class="ic" aria-hidden="true" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+    </a>
+    <span class="appbar-title">我的订单</span>
+  </header>
+
+  <div style="padding:var(--s3) var(--gutter);background:var(--surface)">
+    <div class="segmented" id="roles" style="display:flex;width:100%">
+      <button class="on" data-role="BUYER" style="flex:1">我买到的</button>
+      <button data-role="SELLER" style="flex:1">我卖出的 / 我接的</button>
+    </div>
+  </div>
+
+  <div class="tabs" id="statusbar">
+    <span class="tab tab--on" data-status="ALL">全部</span>
+    <span class="tab" data-status="CREATED">待确认</span>
+    <span class="tab" data-status="CONFIRMED">待交付</span>
+    <span class="tab" data-status="DELIVERED">待收货</span>
+    <span class="tab" data-status="COMPLETED">已完成</span>
+    <span class="tab" data-status="DISPUTE">仲裁中</span>
+  </div>
+
+  <main class="app-main">
+    <div class="feed mt-3" id="list"></div>
+  </main>
+
+</div>
+
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/ui.js"></script>
+<script>
+(function () {
+  UI.shell();
+
+  var params = new URLSearchParams(location.search);
+  var role = params.get('role') || 'BUYER';
+  var status = params.get('status') || 'ALL';
+
+  function paint() {
+    UI.$$('#roles button').forEach(function (b) { b.classList.toggle('on', b.dataset.role === role); });
+    UI.$$('#statusbar .tab').forEach(function (t) { t.classList.toggle('tab--on', t.dataset.status === status); });
+    UI.renderOrders(document.getElementById('list'), { role: role, status: status });
+  }
+
+  document.getElementById('roles').addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b) return;
+    role = b.dataset.role; status = 'ALL'; paint();
+  });
+
+  document.getElementById('statusbar').addEventListener('click', function (e) {
+    var t = e.target.closest('.tab');
+    if (!t) return;
+    status = t.dataset.status; paint();
+  });
+
+  paint();
+})();
+</script>
+</body>
+</html>

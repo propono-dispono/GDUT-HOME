@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>校集 · 项目结构地图</title>
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --surface: #ffffff;
+    --surface-2: #f1f3f6;
+    --ink: #171a1f;
+    --ink-2: #4b5563;
+    --ink-3: #8a94a3;
+    --line: #e5e8ee;
+    --line-strong: #d6dbe4;
+    --mp: #3568e8;
+    --mp-soft: #eaf0ff;
+    --server: #0f9d6e;
+    --server-soft: #e6f7f0;
+    --admin: #7c5cd6;
+    --admin-soft: #f0ebff;
+    --doc: #c47b12;
+    --doc-soft: #fdf3e2;
+    --legacy: #7b8794;
+    --legacy-soft: #eef1f4;
+    --danger: #c2413b;
+    --danger-soft: #fdeceb;
+    --radius: 14px;
+    --shadow: 0 1px 2px rgba(20, 25, 35, .04), 0 8px 24px rgba(20, 25, 35, .05);
+    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  code, .mono { font-family: var(--mono); }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* ---------- hero ---------- */
+  .hero {
+    background:
+      radial-gradient(900px 320px at 8% -20%, rgba(53, 104, 232, .12), transparent 60%),
+      radial-gradient(700px 300px at 92% 0%, rgba(15, 157, 110, .10), transparent 60%),
+      linear-gradient(180deg, #fbfcff 0%, #f6f7f9 100%);
+    border-bottom: 1px solid var(--line);
+    padding: 54px 0 34px;
+  }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--ink-3); font-weight: 650;
+  }
+  .eyebrow::before { content: ""; width: 22px; height: 2px; background: var(--ink); border-radius: 2px; }
+  h1 { margin: 12px 0 6px; font-size: clamp(34px, 5vw, 54px); letter-spacing: -.03em; line-height: 1.08; }
+  .hero p.lead { margin: 0; max-width: 760px; color: var(--ink-2); font-size: 16px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 11px; border-radius: 999px;
+    border: 1px solid var(--line-strong); background: rgba(255,255,255,.7);
+    font-size: 12px; color: var(--ink-2);
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-3); }
+  .dot.green { background: var(--server); }
+  .dot.blue { background: var(--mp); }
+  .dot.purple { background: var(--admin); }
+  .dot.amber { background: var(--doc); }
+
+  /* ---------- stats ---------- */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 28px; }
+  .stat {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 18px 18px 16px; box-shadow: var(--shadow);
+  }
+  .stat .k { font-size: 12px; color: var(--ink-3); }
+  .stat .v { font-size: 30px; font-weight: 750; letter-spacing: -.03em; margin-top: 4px; }
+  .stat .s { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+
+  /* ---------- section ---------- */
+  section { margin-top: 42px; }
+  .sec-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+  .sec-head h2 { margin: 0; font-size: 21px; letter-spacing: -.02em; }
+  .sec-head p { margin: 0; color: var(--ink-3); font-size: 13px; }
+
+  /* ---------- flow ---------- */
+  .flow {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 22px; box-shadow: var(--shadow); overflow-x: auto;
+  }
+  .flow-row { display: flex; align-items: stretch; gap: 10px; min-width: 980px; }
+  .flow-box {
+    flex: 1; min-width: 150px; border: 1px solid var(--line); border-radius: 12px;
+    padding: 13px 14px; background: #fbfcfe;
+  }
+  .flow-box .t { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 7px; }
+  .flow-box .d { font-size: 11.5px; color: var(--ink-3); margin-top: 4px; line-height: 1.5; }
+  .flow-box .path { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); margin-top: 6px; word-break: break-all; }
+  .arrow { flex: 0 0 26px; display: grid; place-items: center; color: var(--ink-3); font-size: 16px; }
+  .flow-legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 14px; font-size: 11.5px; color: var(--ink-3); }
+  .flow-legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+  /* ---------- filters ---------- */
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
+  .fbtn {
+    border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink-2);
+    border-radius: 999px; padding: 7px 13px; font-size: 12.5px; cursor: pointer;
+    transition: .15s ease;
+  }
+  .fbtn:hover { border-color: #b9c1ce; }
+  .fbtn.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .search {
+    margin-left: auto; min-width: 220px; flex: 1 1 220px; max-width: 320px;
+    border: 1px solid var(--line-strong); background: var(--surface); border-radius: 10px;
+    padding: 8px 12px; font-size: 13px; outline: none;
+  }
+  .search:focus { border-color: var(--mp); box-shadow: 0 0 0 3px var(--mp-soft); }
+
+  /* ---------- module cards ---------- */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 19px; box-shadow: var(--shadow); cursor: pointer; position: relative;
+    transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+    overflow: hidden;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(20,25,35,.09); border-color: var(--line-strong); }
+  .card::before {
+    content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--c, var(--ink));
+  }
+  .card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px;
+    border-radius: 999px; font-size: 11px; font-weight: 700; color: var(--c, var(--ink));
+    background: var(--cs, var(--surface-2));
+  }
+  .count { font-size: 11.5px; color: var(--ink-3); font-family: var(--mono); }
+  .card h3 { margin: 12px 0 2px; font-size: 18px; letter-spacing: -.01em; }
+  .card .p { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); }
+  .card .desc { margin: 9px 0 0; font-size: 13px; color: var(--ink-2); min-height: 42px; }
+  .mini { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .mini span {
+    font-size: 11px; color: var(--ink-2); background: var(--surface-2);
+    border: 1px solid var(--line); border-radius: 7px; padding: 3px 7px;
+  }
+  .card .open { margin-top: 14px; font-size: 12px; color: var(--c, var(--ink)); font-weight: 650; display: inline-flex; gap: 5px; }
+  .card.hidden { display: none; }
+
+  /* ---------- tree ---------- */
+  .tree-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; box-shadow: var(--shadow); }
+  .tree { font-family: var(--mono); font-size: 12.5px; line-height: 1.9; color: var(--ink-2); overflow-x: auto; }
+  .tree .dir { color: var(--ink); font-weight: 700; }
+  .tree .role { color: var(--ink-3); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif; }
+  .tree .hot { color: var(--mp); }
+  .tree .warn { color: var(--danger); }
+  details { margin: 2px 0; }
+  details > summary { cursor: pointer; list-style: none; }
+  details > summary::-webkit-details-marker { display: none; }
+  details > summary::before { content: "▸ "; color: var(--ink-3); }
+  details[open] > summary::before { content: "▾ "; }
+  .indent { padding-left: 20px; border-left: 1px dashed var(--line-strong); margin-left: 6px; }
+
+  /* ---------- table ---------- */
+  .table-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: #fafbfd; font-size: 11.5px; letter-spacing: .04em; color: var(--ink-3); font-weight: 700; }
+  tr:last-child td { border-bottom: 0; }
+  td code { font-size: 11.5px; background: var(--surface-2); padding: 2px 6px; border-radius: 5px; }
+  td .role-text { color: var(--ink-2); }
+
+  /* ---------- routes ---------- */
+  .routes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .route {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 17px; box-shadow: var(--shadow);
+  }
+  .route .n { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+  .route h4 { margin: 6px 0 8px; font-size: 15px; }
+  .route p { margin: 0; font-size: 12.5px; color: var(--ink-2); }
+  .route ol { margin: 8px 0 0; padding-left: 18px; font-size: 12px; color: var(--ink-2); }
+  .route li { margin: 3px 0; }
+
+  /* ---------- warnings ---------- */
+  .warn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .warn-card { border: 1px solid #f2d4d1; background: var(--danger-soft); border-radius: var(--radius); padding: 16px 17px; }
+  .warn-card h4 { margin: 0 0 6px; font-size: 14px; color: #8f2d28; }
+  .warn-card p { margin: 0; font-size: 12.5px; color: #7a3a36; }
+  .warn-card code { background: rgba(255,255,255,.65); padding: 1px 5px; border-radius: 5px; font-size: 11.5px; }
+
+  /* ---------- drawer ---------- */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(17, 22, 30, .38);
+    opacity: 0; pointer-events: none; transition: opacity .18s ease; z-index: 40;
+    backdrop-filter: blur(2px);
+  }
+  .overlay.on { opacity: 1; pointer-events: auto; }
+  .drawer {
+    position: fixed; top: 0; right: 0; height: 100%; width: min(560px, 94vw);
+    background: var(--surface); box-shadow: -20px 0 60px rgba(15,20,30,.18);
+    transform: translateX(102%); transition: transform .22s cubic-bezier(.2,.8,.2,1);
+    z-index: 50; display: flex; flex-direction: column;
+  }
+  .drawer.on { transform: translateX(0); }
+  .drawer-head { padding: 22px 24px 16px; border-bottom: 1px solid var(--line); }
+  .drawer-head .eyebrow { font-size: 10.5px; }
+  .drawer-head h3 { margin: 7px 0 2px; font-size: 22px; letter-spacing: -.02em; }
+  .drawer-head .path { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); }
+  .drawer-body { padding: 18px 24px 40px; overflow-y: auto; }
+  .drawer-body h4 { margin: 18px 0 8px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .drawer-body p { margin: 0 0 10px; font-size: 13.5px; color: var(--ink-2); }
+  .drawer-body ul { margin: 0; padding-left: 18px; font-size: 13px; color: var(--ink-2); }
+  .drawer-body li { margin: 5px 0; }
+  .drawer-body li code { font-size: 11.5px; background: var(--surface-2); padding: 1px 5px; border-radius: 5px; }
+  .drawer-close {
+    position: absolute; top: 16px; right: 18px; width: 32px; height: 32px;
+    border-radius: 50%; border: 1px solid var(--line); background: #fff; cursor: pointer;
+    font-size: 16px; color: var(--ink-2); display: grid; place-items: center;
+  }
+  .drawer-close:hover { background: var(--surface-2); }
+  .drawer .file-row { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 12.5px; }
+  .drawer .file-row:last-child { border-bottom: 0; }
+  .drawer .file-row code { flex: 0 0 46%; font-size: 11.5px; color: var(--ink); word-break: break-all; }
+  .drawer .file-row span { color: var(--ink-2); }
+
+  footer { margin-top: 52px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 12px; display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+
+  @media (max-width: 1040px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    .routes { grid-template-columns: repeat(2, 1fr); }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .warn-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .wrap { padding: 0 16px 60px; }
+    .grid, .routes, .stats { grid-template-columns: 1fr; }
+    .flow { padding: 16px; }
+    .search { margin-left: 0; max-width: none; }
+    .hero { padding-top: 36px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">SchoolMarket · 项目结构地图</div>
+    <h1>校集</h1>
+    <p class="lead">
+      广东工业大学校园小程序：微信小程序用户端 + Spring Boot 后端 + Vue3 管理后台。
+      这张图只画<strong>真正运行的项目</strong>，把模板、历史参考和构建产物单独标出来，避免一上来就被两万多个依赖文件淹没。
+    </p>
+    <div class="chips">
+      <span class="chip"><i class="dot blue"></i>小程序 15 个页面</span>
+      <span class="chip"><i class="dot green"></i>Spring Boot 3.2.5 / Java 21</span>
+      <span class="chip"><i class="dot purple"></i>Vue3 + Element Plus</span>
+      <span class="chip"><i class="dot amber"></i>MySQL 22+ 表 / Redis</span>
+      <span class="chip"><i class="dot green"></i>教务 SSO 已接真实数据</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="stats" aria-label="项目规模">
+    <div class="stat"><div class="k">微信小程序</div><div class="v">63</div><div class="s">个源文件 · 15 个页面</div></div>
+    <div class="stat"><div class="k">后端 src</div><div class="v">167</div><div class="s">Java 文件 · 14 个 Service</div></div>
+    <div class="stat"><div class="k">管理后台 src</div><div class="v">222</div><div class="s">Vue/TS 源文件（不含依赖）</div></div>
+    <div class="stat"><div class="k">文档与工具</div><div class="v">60+</div><div class="s">方案 / 审计 / 部署 / 脚本</div></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>先看数据流：三端怎么连起来</h2>
+      <p>所有请求都从 Nginx 进，再按路径分流</p>
+    </div>
+    <div class="flow">
+      <div class="flow-row">
+        <div class="flow-box">
+          <div class="t"><span class="dot blue"></span>微信小程序</div>
+          <div class="d">用户端：浏览、发布、私信、资料、教务</div>
+          <div class="path">xiaojii-mp/</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="flow-box">
+          <div class="t">Nginx · HTTPS</div>
+          <div class="d">证书、反代、静态资源、接口文档 404</div>
+          <div class="path">xj.sxz-blog.xyz</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="flow-box">
+          <div class="t"><span class="dot green"></span>Spring Boot</div>
+          <div class="d">业务逻辑、鉴权、教务 SSO、文件上传</div>
+          <div class="path">127.0.0.1:8081/api</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="flow-box">
+          <div class="t">MySQL / Redis</div>
+          <div class="d">业务数据 / 登录态、验证码、教务会话</div>
+          <div class="path">3307 / 6379</div>
+        </div>
+        <div class="arrow">↗</div>
+        <div class="flow-box">
+          <div class="t"><span class="dot purple"></span>管理后台</div>
+          <div class="d">审核、用户、公告、举报、词库</div>
+          <div class="path">/admin/ → Vue dist</div>
+        </div>
+      </div>
+      <div class="flow-legend">
+        <span><i class="dot blue"></i>用户端</span>
+        <span><i class="dot purple"></i>管理端</span>
+        <span><i class="dot green"></i>服务端</span>
+        <span>教务：Spring Boot → authserver.gdut.edu.cn（SSO）→ jxfw.gdut.edu.cn</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>项目模块：点开看目录和关键文件</h2>
+      <p>绿色=运行核心；灰色=历史/模板，不要改</p>
+    </div>
+    <div class="toolbar">
+      <button class="fbtn on" data-filter="all">全部</button>
+      <button class="fbtn" data-filter="mp">小程序</button>
+      <button class="fbtn" data-filter="server">后端</button>
+      <button class="fbtn" data-filter="admin">管理后台</button>
+      <button class="fbtn" data-filter="docs">资料/工具</button>
+      <button class="fbtn" data-filter="legacy">历史/模板</button>
+      <input class="search" id="search" type="search" placeholder="搜目录或作用，例如：课表、审核、发布…" />
+    </div>
+    <div class="grid" id="moduleGrid"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>项目结构树（只画有意义的目录）</h2>
+      <p>点开三角可以展开；<span class="mono">node_modules / dist / target</span> 已省略</p>
+    </div>
+    <div class="tree-card">
+      <div class="tree">
+<div><span class="dir">E:\SchoolMarket</span></div>
+<div class="indent">
+  <details open>
+    <summary><span class="dir">xiaojii-mp/</span> <span class="role">微信小程序（用户端，真正运行）</span></summary>
+    <div class="indent">
+      <div><span class="dir">app.json / app.js / app.wxss</span> <span class="role">全局入口：页面注册、tabBar、设计令牌</span></div>
+      <details open>
+        <summary><span class="dir">pages/</span> <span class="role">15 个页面</span></summary>
+        <div class="indent">
+          <div><span class="dir">home/</span> <span class="role">首页：公告轮播、六业务线、信息流、今日课程</span></div>
+          <div><span class="dir">category/ list/ detail/</span> <span class="role">分类、列表、帖子详情</span></div>
+          <div><span class="dir">publish/</span> <span class="role">发布：二手/跑腿/技能/租赁/失物/拼单</span></div>
+          <div><span class="dir">messages/ chat/</span> <span class="role">消息列表、私信会话</span></div>
+          <div><span class="dir">mine/ profile-edit/ settings/</span> <span class="role">我的、编辑资料、设置</span></div>
+          <div><span class="dir">user/ verify/</span> <span class="role">他人主页、校园认证</span></div>
+          <div><span class="dir">favorites/ posts/</span> <span class="role">收藏、我的发布</span></div>
+          <div><span class="dir hot">edu/</span> <span class="role">教务：课表/成绩/考试 + login/ 统一认证登录</span></div>
+        </div>
+      </details>
+      <div><span class="dir">templates/</span> <span class="role">card.wxml 信息流卡片、tabbar.wxml 底栏</span></div>
+      <div><span class="dir">utils/api.js</span> <span class="role">环境判断（devtools/手机）、登录、请求、上传</span></div>
+      <div><span class="dir">utils/biz.js</span> <span class="role">六条业务线字典、卡片字段映射</span></div>
+    </div>
+  </details>
+
+  <details open>
+    <summary><span class="dir">xiaojii-server/</span> <span class="role">Spring Boot 3.2.5 / Java 21 后端</span></summary>
+    <div class="indent">
+      <div><span class="dir">controller/app/</span> <span class="role">小程序接口：登录、帖子、聊天、收藏、资料、教务</span></div>
+      <div><span class="dir">controller/admin/</span> <span class="role">管理后台接口：认证、审核、用户、公告、举报、词库</span></div>
+      <div><span class="dir">service/ + impl/</span> <span class="role">14 个业务 Service：帖子、用户、教务、聊天、认证…</span></div>
+      <div><span class="dir">entity/ + mapper/</span> <span class="role">21 个实体与 MyBatis-Plus Mapper</span></div>
+      <div><span class="dir">dto/req/ + dto/vo/</span> <span class="role">入参与出参，避免直接暴露实体</span></div>
+      <div><span class="dir">common/ config/ interceptor/ support/</span> <span class="role">异常、JWT、拦截器、文件存储、信任库</span></div>
+      <details>
+        <summary><span class="dir">sql/</span> <span class="role">建表与迁移</span></summary>
+        <div class="indent">
+          <div><span class="dir">schema.sql</span> <span class="role">全量 22+ 张表</span></div>
+          <div><span class="dir">migration_20261019_user_profile.sql</span> <span class="role">个人资料扩展</span></div>
+          <div><span class="dir">migration_20261019_edu_credential.sql</span> <span class="role">教务账号加密凭据</span></div>
+        </div>
+      </details>
+      <div><span class="dir">deploy/</span> <span class="role">Dockerfile、Nginx、env 模板、每日备份</span></div>
+      <div><span class="dir">fixtures/</span> <span class="role warn">本地样例数据，生产不走这里</span></div>
+    </div>
+  </details>
+
+  <details open>
+    <summary><span class="dir">mall-admin-web/</span> <span class="role">Vue3 + Element Plus 管理后台</span></summary>
+    <div class="indent">
+      <div><span class="dir">src/views/xj/</span> <span class="role">校集业务页：公告/内容/认证/用户/举报/词库/聊天</span></div>
+      <div><span class="dir">src/views/home/</span> <span class="role">概览：真实统计 + 待办入口</span></div>
+      <div><span class="dir">src/router/guard.ts</span> <span class="role">登录守卫：无 token 跳登录页</span></div>
+      <div><span class="dir">src/stores/</span> <span class="role">user（登录态）、permission（动态路由）</span></div>
+      <div><span class="dir">src/apis/admin.ts</span> <span class="role">管理端 API 定义</span></div>
+      <div><span class="dir">src/utils/xj.ts / http.ts</span> <span class="role">请求封装、401 清态、登录跳转</span></div>
+      <div><span class="dir warn">src/views/oms|pms|sms|ums|test</span> <span class="role">mall 模板遗留，路由已移除，不要改</span></div>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="dir">tools/ prototype/ design/ 验收截图/</span> <span class="role">支撑资料</span></summary>
+    <div class="indent">
+      <div><span class="dir">tools/</span> <span class="role">22 个脚本：部署、冒烟、教务探测、截图</span></div>
+      <div><span class="dir">prototype/</span> <span class="role">原型 HTML + 18 张商品图</span></div>
+      <div><span class="dir">design/</span> <span class="role">视觉方案 v1</span></div>
+      <div><span class="dir">验收截图/</span> <span class="role">课表/成绩/考试真机截图</span></div>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="dir warn">mall/ WeCollege/ wecollege-web/ admin-web/</span> <span class="role">历史参考与模板（不参与运行）</span></summary>
+    <div class="indent">
+      <div><span class="dir">mall/</span> <span class="role">Java mall 模板（748 文件）</span></div>
+      <div><span class="dir">WeCollege/</span> <span class="role">校园圈参考项目（602 文件）</span></div>
+      <div><span class="dir">wecollege-web/</span> <span class="role">静态预览（21 文件）</span></div>
+      <div><span class="dir">admin-web/</span> <span class="role">旧后台原型（3 文件）</span></div>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="dir warn">_backup/</span> <span class="role">订单模块移除前备份（仅回滚用）</span></summary>
+    <div class="indent"><div>20261019-B/ <span class="role">28 个文件，订单前后端已删除，备份保留</span></div></div>
+  </details>
+
+  <details>
+    <summary><span class="dir warn">构建产物 / 依赖（不要看，不要提交）</span></summary>
+    <div class="indent">
+      <div><span class="dir">node_modules/</span> <span class="role">两万多个依赖文件</span></div>
+      <div><span class="dir">dist*/ target/</span> <span class="role">打包产物；后台旧版还留了 dist-old/backup</span></div>
+      <div><span class="dir">logs/ hs_err_pid*.log replay_pid*.log</span> <span class="role">运行日志，排障才看</span></div>
+      <div><span class="dir">preview-xj*.png</span> <span class="role">真机预览二维码，不是源码</span></div>
+    </div>
+  </details>
+</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>最该先看的 12 个文件</h2>
+      <p>按这个顺序读，能最快建立全局认知</p>
+    </div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th style="width:34%">文件</th><th>作用</th></tr></thead>
+        <tbody>
+          <tr><td><code>xiaojii-mp/app.json</code></td><td class="role-text">小程序页面注册、tabBar、窗口样式；新增页面必须先加这里</td></tr>
+          <tr><td><code>xiaojii-mp/utils/api.js</code></td><td class="role-text">环境判断（工具走本地、手机走线上）、登录、请求、上传；改域名只看这里</td></tr>
+          <tr><td><code>xiaojii-mp/pages/home/home.js</code></td><td class="role-text">首页数据流：公告轮播、信息流、教务入口、未读红点</td></tr>
+          <tr><td><code>xiaojii-mp/pages/edu/edu.js</code></td><td class="role-text">教务页：课表网格、成绩、考试三块的状态与渲染</td></tr>
+          <tr><td><code>xiaojii-mp/pages/edu/login/login.js</code></td><td class="role-text">统一认证登录：学号密码，无图形验证码</td></tr>
+          <tr><td><code>xiaojii-server/controller/app/</code></td><td class="role-text">小程序所有接口入口；先看 Controller 再看 Service</td></tr>
+          <tr><td><code>service/impl/EduAuthServiceImpl.java</code></td><td class="role-text">教务 SSO 登录、密码加密、信任库、Redis 会话</td></tr>
+          <tr><td><code>service/impl/EduDataServiceImpl.java</code></td><td class="role-text">课表/成绩/考试真实接口与解析，fixtures 仅本地</td></tr>
+          <tr><td><code>service/impl/UserServiceImpl.java</code></td><td class="role-text">个人资料、逐项隐私过滤、年龄计算</td></tr>
+          <tr><td><code>mall-admin-web/src/router/guard.ts</code></td><td class="role-text">管理后台登录守卫；无 token 一律跳登录</td></tr>
+          <tr><td><code>mall-admin-web/src/views/xj/</code></td><td class="role-text">后台真正的校集业务页；oms/pms/sms/ums 是模板遗留</td></tr>
+          <tr><td><code>xiaojii-server/sql/schema.sql</code></td><td class="role-text">全量数据模型；配合两个 migration 看增量</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>按目标选阅读路线</h2>
+      <p>不用从头读，按你要改的东西挑一条</p>
+    </div>
+    <div class="routes">
+      <div class="route">
+        <div class="n">01 / 用户端</div>
+        <h4>我想改小程序</h4>
+        <p>从全局入口到页面，再到接口。</p>
+        <ol>
+          <li><code>app.json</code> 看页面注册</li>
+          <li><code>utils/api.js</code> 看域名/登录</li>
+          <li><code>pages/home</code> 看首页数据流</li>
+          <li><code>templates/card.wxml</code> 看卡片</li>
+        </ol>
+      </div>
+      <div class="route">
+        <div class="n">02 / 服务端</div>
+        <h4>我想改后端</h4>
+        <p>Controller → Service → Mapper → SQL。</p>
+        <ol>
+          <li><code>controller/app</code> 找接口</li>
+          <li><code>service/impl</code> 看业务</li>
+          <li><code>entity/mapper</code> 看表</li>
+          <li><code>sql/schema.sql</code> 对字段</li>
+        </ol>
+      </div>
+      <div class="route">
+        <div class="n">03 / 管理端</div>
+        <h4>我想改后台</h4>
+        <p>先看守卫，再看业务页。</p>
+        <ol>
+          <li><code>router/guard.ts</code> 登录态</li>
+          <li><code>views/xj</code> 校集业务页</li>
+          <li><code>utils/xj.ts</code> 请求封装</li>
+          <li><code>views/home</code> 概览</li>
+        </ol>
+      </div>
+      <div class="route">
+        <div class="n">04 / 部署</div>
+        <h4>我想上线/排障</h4>
+        <p>部署文件都在 deploy 与根目录文档。</p>
+        <ol>
+          <li><code>deploy/nginx-xj.conf</code></li>
+          <li><code>deploy/Dockerfile</code></li>
+          <li><code>deploy/backup.sh</code></li>
+          <li><code>校集-上线部署记录</code></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>三个“别碰”</h2>
+      <p>这几类是历史/模板/产物，改它们不会影响线上</p>
+    </div>
+    <div class="warn-grid">
+      <div class="warn-card">
+        <h4>别把模板当业务</h4>
+        <p><code>mall/</code>、<code>WeCollege/</code>、<code>wecollege-web/</code>、<code>admin-web/</code> 是参考/旧原型，不参与校集运行。后台里的 <code>views/oms|pms|sms|ums</code> 也是 mall 模板遗留，路由已移除。</p>
+      </div>
+      <div class="warn-card">
+        <h4>别看构建产物</h4>
+        <p><code>node_modules/</code>、<code>dist*/</code>、<code>target/</code>、<code>logs/</code>、<code>hs_err/replay</code> 都是依赖、打包或运行日志；读它们只会浪费上下文。</p>
+      </div>
+      <div class="warn-card">
+        <h4>别删关键入口</h4>
+        <p><code>app.json</code> 的页面注册、<code>utils/api.js</code> 的环境判断、<code>router/guard.ts</code> 的登录守卫、<code>deploy/nginx-xj.conf</code> 的接口文档 404，都是关键入口，改动前先确认影响面。</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>校集 · 项目结构地图 · 2026-10-20</span>
+    <span>统计已排除 node_modules / dist / target / .git；点击卡片可看目录细节</span>
+  </footer>
+</main>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <button class="drawer-close" id="drawerClose" aria-label="关闭">✕</button>
+  <div class="drawer-head">
+    <div class="eyebrow" id="dEyebrow">MODULE</div>
+    <h3 id="dTitle">模块</h3>
+    <div class="path" id="dPath"></div>
+  </div>
+  <div class="drawer-body" id="dBody"></div>
+</aside>
+
+<script>
+const MODULES = [
+  {
+    id: 'mp', cat: 'mp', color: 'var(--mp)', soft: 'var(--mp-soft)',
+    badge: '用户端 · 已上线', count: '63 files · 15 pages',
+    title: '微信小程序', path: 'xiaojii-mp/',
+    desc: '用户真正使用的入口：浏览信息流、发布六条业务线、私信、个人资料、校园认证与教务。',
+    mini: ['app.json', 'pages/', 'templates/', 'utils/api.js'],
+    intro: '原生小程序（WXML/WXSS/JS），没有用 uni-app 或 Taro。所有请求走 utils/api.js，页面按业务分成 15 个目录。',
+    groups: [
+      ['全局入口', ['app.json：页面注册 + tabBar + 窗口样式', 'app.js：启动、安全区、全局数据', 'app.wxss：设计令牌 + 全站样式']],
+      ['主 Tab', ['pages/home：首页公告轮播 + 信息流 + 今日课程', 'pages/category：分类', 'pages/messages：消息列表', 'pages/mine：我的 + 资料卡']],
+      ['交易链路', ['pages/publish：六条业务线发布', 'pages/list：列表与筛选', 'pages/detail：详情 + 私信入口', 'pages/favorites、pages/posts：收藏/我的发布']],
+      ['社交与资料', ['pages/chat：私信会话', 'pages/user：他人主页', 'pages/verify：校园认证', 'pages/profile-edit：编辑资料 + 头像上传', 'pages/settings：设置']],
+      ['教务', ['pages/edu/edu：课表 / 成绩 / 考试三个 Tab', 'pages/edu/login：统一认证登录（学号密码，无验证码）']],
+      ['公共', ['templates/card.wxml：信息流卡片', 'templates/tabbar.wxml：自定义底栏', 'utils/api.js：环境/登录/请求/上传', 'utils/biz.js：业务字典与卡片映射']]
+    ],
+    files: [
+      ['app.json', '页面注册、tabBar；新增页面必须先加这里'],
+      ['utils/api.js', 'devtools→本地，手机→线上；token、wx.login、uploadFile'],
+      ['pages/home/home.js', '首页数据流：公告、feed、未读、教务入口'],
+      ['pages/edu/edu.js', '课表网格 + 成绩 + 考试的状态与渲染'],
+      ['pages/edu/login/login.js', 'SSO 登录表单与错误处理'],
+      ['pages/profile-edit/profile-edit.js', '资料字段、隐私开关、头像上传']
+    ]
+  },
+  {
+    id: 'server', cat: 'server', color: 'var(--server)', soft: 'var(--server-soft)',
+    badge: '服务端 · 已上线', count: '401 files · src 167',
+    title: 'Spring Boot 后端', path: 'xiaojii-server/',
+    desc: '一个 Spring Boot 应用同时服务小程序端（/app/**）与管理后台（/admin/**），独立 JWT 类型隔离。',
+    mini: ['controller/app', 'controller/admin', 'service/impl', 'sql/'],
+    intro: 'Spring Boot 3.2.5 + Java 21 + MyBatis-Plus + MySQL 8 + Redis 7。管理端与小程序端共用一套服务，但令牌 typ 不同，拦截器分开校验。',
+    groups: [
+      ['接口层', ['controller/app：小程序接口（登录、帖子、聊天、收藏、资料、教务）', 'controller/admin：管理后台接口（认证、审核、用户、公告、举报、词库）']],
+      ['业务层', ['service/：14 个接口', 'service/impl/：帖子、用户、认证、聊天、教务、审核、公告、举报、词库']],
+      ['数据层', ['entity/：21 个实体（Post/User/UserProfile/EduCredential…）', 'mapper/：MyBatis-Plus BaseMapper', 'dto/req + dto/vo：入参与出参']],
+      ['基础设施', ['common/：Result、BizException、JWT、UserContext', 'config/：WebMvc、CORS、MyBatis、Redis', 'interceptor/：小程序/管理端鉴权', 'support/：文件存储、本地/生产实现']],
+      ['数据库', ['sql/schema.sql：全量 22+ 表', 'migration_20261019_user_profile.sql：个人资料', 'migration_20261019_edu_credential.sql：教务凭据']],
+      ['部署', ['deploy/Dockerfile', 'deploy/nginx-xj.conf', 'deploy/env.example', 'deploy/backup.sh']]
+    ],
+    files: [
+      ['EduAuthServiceImpl.java', 'SSO 登录、密码 AES、GDCA 信任库、Redis 会话'],
+      ['EduDataServiceImpl.java', '课表/成绩/考试真实接口与解析'],
+      ['UserServiceImpl.java', '资料字段、逐项隐私、年龄计算'],
+      ['AdminAuthServiceImpl.java', '后台登录、PBKDF2、登录限流'],
+      ['PostServiceImpl.java', '六条业务线、审核状态、卡片 cover'],
+      ['sql/schema.sql', '全量数据模型']
+    ]
+  },
+  {
+    id: 'admin', cat: 'admin', color: 'var(--admin)', soft: 'var(--admin-soft)',
+    badge: '管理端 · 已上线', count: 'src 222 files',
+    title: 'Vue3 管理后台', path: 'mall-admin-web/',
+    desc: '运营与审核用：登录、概览、认证审核、内容审核、用户管理、公告、举报、敏感词、聊天。',
+    mini: ['src/views/xj', 'src/router', 'src/stores', 'src/utils/xj.ts'],
+    intro: 'Vue3 + TypeScript + Element Plus + Vite。项目从 mall 模板改造而来，真正活跃的是 views/xj 与 home；oms/pms/sms/ums 是模板遗留。',
+    groups: [
+      ['业务页', ['views/xj/announcement：公告', 'views/xj/post：内容审核', 'views/xj/verify：校园认证审核', 'views/xj/user：用户管理', 'views/xj/report：举报', 'views/xj/word：敏感词', 'views/xj/chat：聊天']],
+      ['框架', ['views/home：真实概览 + 待办', 'views/layout：侧栏、顶栏、头像/改密', 'views/normal/login：后台登录']],
+      ['路由与状态', ['router/guard.ts：无 token 跳登录', 'router/index.ts：动态路由', 'stores/user.ts：登录态', 'stores/permission.ts：菜单权限']],
+      ['请求', ['apis/admin.ts：管理端 API', 'utils/xj.ts：带 token 请求、401 跳登录', 'utils/http.ts：拦截器']],
+      ['样式与资源', ['styles/：全局样式', 'assets/images/admin-avatar.jpg：管理员头像', 'components/：通用组件']]
+    ],
+    files: [
+      ['src/router/guard.ts', '后台登录守卫，最关键的安全入口'],
+      ['src/views/xj/post/index.vue', '内容审核：列表、通过、驳回、下架'],
+      ['src/views/xj/verify/index.vue', '认证审核：学生证预览、通过/驳回'],
+      ['src/views/xj/user/index.vue', '用户管理：信用分、封禁/解封'],
+      ['src/utils/xj.ts', '请求封装、401 清态'],
+      ['src/stores/permission.ts', 'SUPER 全量菜单 / 其他角色按 menus 过滤']
+    ]
+  },
+  {
+    id: 'docs', cat: 'docs', color: 'var(--doc)', soft: 'var(--doc-soft)',
+    badge: '支撑资料', count: '60+ files',
+    title: '文档、工具与原型', path: 'tools/ · prototype/ · design/ · 根目录 md',
+    desc: '方案、审计、部署记录、交接材料、冒烟脚本、原型与验收截图；不参与运行时，但排障和接手全靠它。',
+    mini: ['tools/', 'prototype/', '验收截图/', '根目录 *.md'],
+    intro: '根目录的 Markdown 是项目“记忆”：方案 V2、安全审计、上线部署、图片排查、教务接口清单、交接材料。tools 里是 Python/JS 脚本，用于冒烟、部署、教务探测。',
+    groups: [
+      ['文档', ['校集-个人主页与教务接入方案-V2', '校集-首页交互与刷新设计', '校集-安全与低级错误审计', '校集-上线部署记录', '校集-教务真实接口清单', '项目交接材料-教务接入']],
+      ['工具', ['tools/smoke_*.py：接口冒烟', 'tools/edu_*.py：教务探测/登录', 'tools/shot_edu.js：教务截图', 'tools/set_admin_pwd.py：重置后台密码']],
+      ['原型与视觉', ['prototype/：14 个 HTML + 18 张商品图', 'design/：视觉方案 v1', '验收截图/：课表/成绩/考试真机截图']],
+      ['预览码', ['preview-xj-4.png：最新真机预览二维码', 'preview-xj*.json：预览信息']]
+    ],
+    files: [
+      ['校集-教务真实接口清单-20261020.md', 'SSO + 成绩/考试/课表真实接口与 8 条工程坑'],
+      ['项目交接材料-教务接入-20261019.md', '给下一个 AI 的完整交接'],
+      ['校集-安全与低级错误审计-20261019.md', '后台免登录、限流、CORS、数据库账号等'],
+      ['tools/edu_browser_login.py', '浏览器方式登录教务并抓 Cookie'],
+      ['tools/smoke_admin.py', '后台接口冒烟'],
+      ['prototype/', '早期静态原型，仅参考']
+    ]
+  },
+  {
+    id: 'legacy', cat: 'legacy', color: 'var(--legacy)', soft: 'var(--legacy-soft)',
+    badge: '历史 / 模板', count: '1400+ files',
+    title: '历史参考与归档', path: 'mall/ · WeCollege/ · wecollege-web/ · admin-web/ · _backup/',
+    desc: '模板、参考项目、旧原型和回滚备份。不参与校集运行，读代码时可以直接跳过。',
+    mini: ['mall/', 'WeCollege/', 'wecollege-web/', 'admin-web/', '_backup/'],
+    intro: '这些目录是项目演进过程留下的：mall 是 Java 商城模板，WeCollege 是校园圈参考项目，wecollege-web 是它的静态预览，admin-web 是早期后台原型，_backup 是移除订单模块前的备份。',
+    groups: [
+      ['模板/参考', ['mall/：Java mall 模板（748 文件）', 'WeCollege/：校园圈参考项目（602 文件）', 'wecollege-web/：静态预览（21 文件）', 'admin-web/：旧后台原型（3 文件）']],
+      ['备份', ['_backup/20261019-B/：订单模块删除前备份（28 文件）', '仅用于回滚，不要当业务代码']],
+      ['构建产物', ['node_modules/、dist*/、target/：依赖与打包产物', 'logs/、hs_err/replay：运行日志', 'preview-xj*.png：预览二维码']]
+    ],
+    files: [
+      ['mall/', 'Java 商城模板，校集早期参考'],
+      ['WeCollege/', '校园圈小程序参考，非本项目'],
+      ['admin-web/', '早期后台静态原型，已被 mall-admin-web 替代'],
+      ['_backup/20261019-B/', '订单模块回滚备份']
+    ]
+  },
+  {
+    id: 'build', cat: 'build', color: '#64748b', soft: '#eef2f6',
+    badge: '构建产物 · 不要看', count: '28k+ files',
+    title: '依赖、打包与日志', path: 'node_modules/ · dist*/ · target/ · logs/',
+    desc: '这些不是源码。读它们只会浪费上下文；排障时只在明确需要看日志/产物时打开。',
+    mini: ['node_modules/', 'dist*/', 'target/', 'logs/'],
+    intro: 'mall-admin-web 的 node_modules 有两万多个文件；后端 target 是编译产物；dist* 是后台打包结果；logs 是运行日志。它们都不应该提交、也不应该用来理解业务。',
+    groups: [
+      ['依赖', ['node_modules/：npm 依赖', 'miniprogram_npm/：小程序 npm 构建产物']],
+      ['打包', ['dist/：后台当前构建', 'dist-old/、dist-backup/：旧版备份', 'target/：后端 jar 与 classes']],
+      ['日志', ['logs/：后端运行日志', 'hs_err_pid*.log / replay_pid*.log：JVM 崩溃日志']]
+    ],
+    files: [
+      ['node_modules/', '依赖，不要读'],
+      ['dist*/', '后台打包结果'],
+      ['target/', '后端编译产物'],
+      ['logs/', '排障时才看']
+    ]
+  }
+];
+
+const grid = document.getElementById('moduleGrid');
+function renderCards() {
+  grid.innerHTML = MODULES.map(m => `
+    <article class="card" data-id="${m.id}" data-cat="${m.cat}" style="--c:${m.color};--cs:${m.soft}">
+      <div class="card-top">
+        <span class="badge">${m.badge}</span>
+        <span class="count">${m.count}</span>
+      </div>
+      <h3>${m.title}</h3>
+      <div class="p">${m.path}</div>
+      <p class="desc">${m.desc}</p>
+      <div class="mini">${m.mini.map(x => `<span>${x}</span>`).join('')}</div>
+      <div class="open">展开结构与文件 <span>→</span></div>
+    </article>
+  `).join('');
+  grid.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => openDrawer(card.dataset.id));
+  });
+}
+
+const drawer = document.getElementById('drawer');
+const overlay = document.getElementById('overlay');
+function openDrawer(id) {
+  const m = MODULES.find(x => x.id === id);
+  if (!m) return;
+  document.getElementById('dEyebrow').textContent = m.badge;
+  document.getElementById('dTitle').textContent = m.title;
+  document.getElementById('dPath').textContent = m.path;
+  const groups = m.groups.map(([name, items]) => `
+    <h4>${name}</h4>
+    <ul>${items.map(i => `<li>${i}</li>`).join('')}</ul>
+  `).join('');
+  const files = m.files.map(([f, r]) => `
+    <div class="file-row"><code>${f}</code><span>${r}</span></div>
+  `).join('');
+  document.getElementById('dBody').innerHTML = `
+    <p>${m.intro}</p>
+    ${groups}
+    <h4>关键文件</h4>
+    ${files}
+  `;
+  drawer.classList.add('on');
+  overlay.classList.add('on');
+  drawer.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+  drawer.classList.remove('on');
+  overlay.classList.remove('on');
+  drawer.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+overlay.addEventListener('click', closeDrawer);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+/* filters + search */
+let activeFilter = 'all';
+const search = document.getElementById('search');
+function applyFilter() {
+  const q = search.value.trim().toLowerCase();
+  grid.querySelectorAll('.card').forEach(card => {
+    const m = MODULES.find(x => x.id === card.dataset.id);
+    const okCat = activeFilter === 'all' || m.cat === activeFilter;
+    const hay = (m.title + ' ' + m.path + ' ' + m.desc + ' ' + m.mini.join(' ') + ' ' + m.groups.flat().join(' ')).toLowerCase();
+    const okQ = !q || hay.includes(q);
+    card.classList.toggle('hidden', !(okCat && okQ));
+  });
+}
+document.querySelectorAll('.fbtn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    activeFilter = btn.dataset.filter;
+    applyFilter();
+  });
+});
+search.addEventListener('input', applyFilter);
+
+renderCards();
+applyFilter();
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!-- detail页 —— 页面结构 -->
+<view class="app">
+
+  <view class="appbar" style="height:{{appbarH}}px;padding-top:{{safeTop}}px;padding-right:{{capsuleRight}}px">
+    <view class="iconbtn" hover-class="iconbtn-hv" bindtap="onBack">
+      <view class="ic ic-i-back"></view>
+    </view>
+    <text class="appbar-title">详情</text>
+    <view class="appbar-spacer"></view>
+    <view class="iconbtn iconbtn--right" hover-class="iconbtn-hv" bindtap="onFav">
+      <view class="ic ic-i-star" style="opacity:{{favored ? 1 : 0.35}}"></view>
+    </view>
+    <view class="iconbtn iconbtn--right" hover-class="iconbtn-hv" bindtap="onMore">
+      <view class="ic ic-i-more"></view>
+    </view>
+  </view>
+
+  <scroll-view class="app-main" scroll-y enable-flex>
+
+    <!-- 驳回/下架原因：只有作者本人能看到 -->
+    <view wx:if="{{post.rejectReason}}" class="reject-banner">
+      <text class="reject-tag">{{post.statusText}}</text>
+      <text class="reject-text">{{post.rejectReason}}</text>
+    </view>
+
+    <!-- 大图 -->
+    <view wx:if="{{heroCover}}" class="media media--wide">
+      <image src="{{heroCover}}" mode="aspectFill" binderror="onHeroError"></image>
+    </view>
+    <view wx:else class="media media--wide media-empty">
+      <view class="ic ic-{{bizIcon}}"></view>
+    </view>
+
+    <view wx:if="{{loading}}" class="empty"><view class="empty-title">加载中…</view></view>
+
+    <block wx:elif="{{post}}">
+      <view class="detail-head">
+        <view class="row gap-2">
+          <text class="tag tag--solid">{{bizLabel}}</text>
+          <text class="text-3">{{post.meta}}</text>
+        </view>
+        <view class="detail-title">{{post.title}}</view>
+        <view class="detail-price">
+          <text wx:if="{{post.price}}" class="price"><text class="cur">¥</text>{{post.price}}</text>
+          <text wx:if="{{post.priceUnit}}" class="text-3">/ {{post.priceUnit}}</text>
+          <text wx:if="{{!post.price}}" class="price--none">资料里未写金额，请通过私信联系</text>
+        </view>
+      </view>
+
+      <view class="section-title mt-3">业务信息</view>
+      <view class="kvlist">
+        <view class="kv" wx:for="{{fields}}" wx:key="k">
+          <text class="kv-k">{{item.k}}</text>
+          <text class="kv-v">{{item.v}}</text>
+        </view>
+      </view>
+
+      <view class="section-title mt-3">描述</view>
+      <view class="detail-desc">{{post.content || '发布者没有填写额外描述'}}</view>
+
+      <view class="section-title mt-3">发布人</view>
+      <view class="rowlink" hover-class="rowlink-hv" bindtap="onUser">
+        <image
+          wx:if="{{post.user && post.user.avatar}}"
+          class="avatar"
+          src="{{post.user.avatar}}"
+          mode="aspectFill"
+        ></image>
+        <image wx:else class="avatar" src="{{userAvatarPath}}" mode="aspectFill"></image>
+        <view class="grow detail-user">
+          <text class="detail-user-name">{{userName}}</text>
+          <text class="detail-user-sub">{{userSub}}</text>
+        </view>
+        <view class="rowlink-chev"><view class="ic ic--sm ic-i-chev"></view></view>
+      </view>
+
+      <view class="detail-notice-wrap" wx:if="{{post.notice}}">
+        <view class="notice">{{post.notice}}</view>
+      </view>
+
+      <view style="height:32rpx"></view>
+    </block>
+
+    <view wx:else class="empty">
+      <view class="empty-ico"><view class="ic ic-i-inbox ic--lg"></view></view>
+      <view class="empty-title">{{errMsg || '内容不存在或已下架'}}</view>
+      <view class="empty-desc">可能已被发布者关闭</view>
+    </view>
+
+  </scroll-view>
+
+  <view class="actionbar" wx:if="{{post}}">
+    <!-- ⛔ 勿删：底部唯一转化入口。B 方案下不接订单，只跳私信（原先左侧重复的「私信」已按方案 A 合并） -->
+    <view class="btn btn--primary btn--block" hover-class="btn-hv" bindtap="onCta">{{ctaText || post.cta || '私信联系'}}</view>
+  </view>
+
+</view>

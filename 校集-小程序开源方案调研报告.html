@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《校集》小程序开源模板与源码调研报告</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#ffffff; --ink:#1f2329; --ink2:#4e5969; --ink3:#86909c;
+    --line:#e5e6eb; --brand:#2b5cd9; --brandbg:#eef3ff;
+    --ok:#0f9d58; --okbg:#e8f7ee; --warn:#d97706; --warnbg:#fef4e6; --risk:#d93f3f; --riskbg:#fdecec;
+    --t1:#2b5cd9; --t2:#0f9d58; --t3:#86909c;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.7;font-size:15px}
+  .wrap{max-width:1060px;margin:0 auto;padding:32px 22px 80px}
+  h1{font-size:26px;margin:0 0 6px;letter-spacing:.3px}
+  .sub{color:var(--ink3);font-size:13px;margin-bottom:26px}
+  h2{font-size:19px;margin:38px 0 14px;padding-left:11px;border-left:4px solid var(--brand)}
+  h3{font-size:16px;margin:24px 0 8px}
+  p{margin:8px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+  .lead{background:var(--brandbg);border:1px solid #cfdcff;border-radius:12px;padding:18px 20px}
+  .lead h2{margin-top:0;border-left-color:transparent;padding-left:0}
+  .k{font-weight:600;color:var(--ink)}
+  .tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:999px;margin-right:6px;vertical-align:middle;white-space:nowrap}
+  .tag.t1{background:var(--t1);color:#fff}
+  .tag.t2{background:var(--t2);color:#fff}
+  .tag.t3{background:var(--t3);color:#fff}
+  .pill{display:inline-block;font-size:12px;padding:1px 8px;border-radius:6px;margin:2px 4px 2px 0;border:1px solid var(--line);background:#fafbfc;color:var(--ink2)}
+  .pill.ok{background:var(--okbg);border-color:#bfe6cf;color:#0b7a45}
+  .pill.warn{background:var(--warnbg);border-color:#f2d7a6;color:#a5620b}
+  .pill.risk{background:var(--riskbg);border-color:#f3c2c2;color:#b32b2b}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:12px 0;background:#fff}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#f2f4f7;font-weight:600;color:var(--ink2);white-space:nowrap}
+  tr:nth-child(even) td{background:#fcfcfd}
+  code{background:#f2f4f7;padding:1px 6px;border-radius:5px;font-size:13px;
+    font-family:Consolas,Monaco,"Courier New",monospace;color:#2456a8}
+  .repo{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;margin-bottom:6px}
+  .repo .name{font-size:16px;font-weight:700}
+  .repo .lnk{font-size:12.5px;color:var(--brand);word-break:break-all}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}}
+  .metric{font-size:13px;color:var(--ink2)}
+  ul{margin:6px 0 6px 0;padding-left:20px}
+  li{margin:3px 0}
+  .box-ok{background:var(--okbg);border:1px solid #bfe6cf;border-radius:10px;padding:12px 16px;margin:10px 0}
+  .box-warn{background:var(--warnbg);border:1px solid #f2d7a6;border-radius:10px;padding:12px 16px;margin:10px 0}
+  .box-risk{background:var(--riskbg);border:1px solid #f3c2c2;border-radius:10px;padding:12px 16px;margin:10px 0}
+  .foot{color:var(--ink3);font-size:12.5px;margin-top:34px;border-top:1px dashed var(--line);padding-top:14px}
+  .num{font-variant-numeric:tabular-nums}
+  .small{font-size:12.5px;color:var(--ink3)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>《校集》微信小程序 · 开源模板与源码调研报告</h1>
+  <div class="sub">检索平台：GitHub / Gitee / GitCode（AtomGit） ｜ 数据核实时间：2026-10-14 ｜ 全部 Star、License、更新时间均取自各仓库接口实时数据，非二手转述</div>
+
+  <div class="lead">
+    <h2>一、结论先行（先看这一段）</h2>
+    <p><span class="k">1. 没有现成的「校集」。</span>本次检索到的相关开源项目全部是<b>单一形态或两三种形态的组合</b>（二手 / 跑腿 / 论坛 / 跑腿便利店），<b>没有任何一个覆盖二手+跑腿+技能+租赁+失物+拼单+担保+信用+后台的完整平台</b>。所以现实路径只有一条：<b>挑 2~3 个模块最贴的项目做「拼装 + 二开」</b>，不要指望 clone 一个就跑。</p>
+    <p><span class="k">2. 这个赛道的开源项目普遍「年轻」。</span>除跑腿类外，Star 数多为 0~30，绝大多数是学生课设/毕设项目，工程成熟度有限。跑腿类最有价值（<code>ddrun</code> 1219★、<code>fuu-run</code> 109★）。</p>
+    <p><span class="k">3. 最大的坑不是代码，是「主体与类目」。</span>《校集》同时含 <b>UGC 信息发布 + 撮合交易 + 社区</b>，<span class="pill risk">个人主体做不了</span>，必须企业/个体工商户主体；且需 ICP 备案，社交/论坛类目需《非经营性互联网信息服务备案核准》。这一条会直接决定项目能不能上线，务必先解决（详见第五节）。</p>
+    <p><span class="k">4. 技术栈建议（结合你的 Java 方向）。</span>若目标是「学习价值 + 可解释」，选 <b>uni-app 前端 + Spring Boot 后端 + Vue 后台</b>（可直接套用下面 Tier2 的 Java 全栈模板）；若目标是「最快跑起来」，选 <b>原生小程序 + 微信云开发</b>（免服务器，Tier1 里有现成的）。两条路的取舍见第三节。</p>
+  </div>
+
+  <h2>二、推荐清单（按适配度排序）</h2>
+  <p class="small">排序依据：与《校集》一期功能的模块重合度 &gt; 是否含后端与后台 &gt; 活跃度 &gt; License 可商用性。</p>
+
+  <h3><span class="tag t1">Tier 1</span> 可直接做主体骨架（综合校园服务，最贴合）</h3>
+
+  <div class="card">
+    <div class="repo"><span class="name">① zeroicey/who_family_wechat</span><span class="pill">校园生活服务</span><span class="pill ok">活跃</span><span class="pill warn">License 不明</span></div>
+    <div class="lnk">https://github.com/zeroicey/who_family_wechat</div>
+    <table>
+      <tr><th>技术栈</th><td>uni-app（Vue）+ uni-ui + Vuex；<b>仅前端</b>，无自带后端</td></tr>
+      <tr><th>社区数据</th><td class="num">Star 11 ｜ Fork 3 ｜ 最后提交 2026-05-07（近期仍在更新）</td></tr>
+      <tr><th>已实现模块</th><td>校园社区（发帖/话题）、快递代拿、文件打印、<b>失物招领</b>、<b>二手交易</b>、个人中心/订单/地址</td></tr>
+      <tr><th>前后端 / 后台</th><td>前端有 / 后端无（需自建 API）/ 管理后台无</td></tr>
+      <tr><th>可复用度</th><td><b>高（前端层面）</b>——这是本次检索到<b>最接近「一站式校园平台」的前端骨架</b>：二手 + 跑腿（快递）+ 失物招领三块都在，Tab 结构可直接改成《校集》的底部导航</td></tr>
+      <tr><th>License</th><td class="pill warn">仓库有 LICENSE 文件但非标准协议（接口判为 NOASSERTION）→ <b>商用前必须人工读一遍该文件</b></td></tr>
+      <tr><th>与《校集》匹配</th><td class="pill ok">定位高度吻合</td><td></td></tr>
+    </table>
+    <div class="box-warn">注意：它把「快递代拿」放在跑腿位、把社区放在首页位，与《校集》「首页聚合 / 服务 / 发布 / 圈子 / 我的」的五 Tab 不完全一致；且无技能互助、租赁、拼单、担保交易、评价信用。定位为<b>「UI 与页面骨架来源」</b>，业务逻辑要自己补。</div>
+  </div>
+
+  <div class="card">
+    <div class="repo"><span class="name">② vancece/secondHandMiniprogram</span><span class="pill">二手交易</span><span class="pill ok">MIT 可商用</span><span class="pill ok">云开发开箱即用</span></div>
+    <div class="lnk">https://github.com/vancece/secondHandMiniprogram</div>
+    <table>
+      <tr><th>技术栈</th><td>微信原生小程序 + <b>微信云开发</b>（云函数 Node.js + 云数据库 + 云存储）+ ColorUI；<b>前端与后端齐全</b></td></tr>
+      <tr><th>社区数据</th><td class="num">Star 4 ｜ Fork 2 ｜ 最后提交 2026-03-11</td></tr>
+      <tr><th>已实现模块</th><td>首页瀑布流、智能搜索、商品发布（图片压缩+内容安全检测）、<b>实时聊天</b>、订单管理、分类、收藏、足迹、热门排行、<b>物品租赁（租期）</b>、<b>学生实名认证</b>；约 40+ 云函数</td></tr>
+      <tr><th>前后端 / 后台</th><td>前端有 / 后端有（云函数）/ 管理后台无（仅小程序内管理能力）</td></tr>
+      <tr><th>可复用度</th><td><b>最高（上手最快）</b>——免买服务器、免搭后端，导入小程序开发者工具即可跑；<b>已含「租赁」和「学生认证」两个《校集》一期模块</b>，还有内容安全检测</td></tr>
+      <tr><th>License</th><td class="pill ok">MIT（可商用、可闭源改，只需保留版权声明）</td></tr>
+      <tr><th>与《校集》匹配</th><td class="pill ok">二手 + 租赁 + 认证三块直接可用；跑腿/技能/拼单/失物需另加</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="repo"><span class="name">③ Martinlee-123/campus-market-wechat（校园集市）</span><span class="pill">二手 + 治理</span><span class="pill ok">MIT 可商用</span><span class="pill ok">最新</span></div>
+    <div class="lnk">https://github.com/Martinlee-123/campus-market-wechat</div>
+    <table>
+      <tr><th>技术栈</th><td>微信原生小程序 + 微信云开发（CloudBase）；<b>23 个云函数</b>；自定义 tabBar（含未读红点）</td></tr>
+      <tr><th>社区数据</th><td class="num">Star 2 ｜ Fork 0 ｜ 最后提交 2026-10-13（<b>本次检索中最新的仓库</b>）</td></tr>
+      <tr><th>已实现模块</th><td>二手交易 + <b>求购板块</b>、<b>校内实名认证（学号规则校验）</b>、站内实时私聊、收藏、<b>举报治理（达阈值自动隐藏 / 黑名单）</b>、<b>管理后台（删帖/下架/统计/认证审核/举报处理）</b>、分享海报、内容安全（文本+图片）</td></tr>
+      <tr><th>前后端 / 后台</th><td>前端有 / 后端有（云函数）/ <b>管理后台有</b></td></tr>
+      <tr><th>可复用度</th><td><b>高</b>——本次检索到<b>「信任体系 + 内容合规 + 后台治理」三件套最完整</b>的项目，正好对应《校集》第 11、12 条（信用/举报/审核）与第 14 条（后台）。云开发同样免服务器</td></tr>
+      <tr><th>License</th><td class="pill ok">MIT</td></tr>
+      <tr><th>与《校集》匹配</th><td class="pill ok">二手 + 认证 + 举报审核 + 后台可直接用；<b>它没有担保交易/资金托管/信用分，这块要自己补</b></td></tr>
+    </table>
+    <div class="box-warn">注意：仓库为示例版，AppID / 云环境 ID / 管理员 openid 均为占位符，使用前需替换。</div>
+  </div>
+
+  <div class="card">
+    <div class="repo"><span class="name">④ moodyawhvh/same-city-wall（同校同城）</span><span class="pill">校园墙 + 闲置 + 跑腿</span><span class="pill warn">License 需人工核对</span></div>
+    <div class="lnk">https://github.com/moodyawhvh/same-city-wall</div>
+    <table>
+      <tr><th>技术栈</th><td>后端 PHP 7.4 + FastAdmin（ThinkPHP5）+ MySQL 8 + GatewayWorker(WebSocket)；前端 uni-app（Vue2）+ uView 2.0</td></tr>
+      <tr><th>社区数据</th><td class="num">Star 2 ｜ Fork 0 ｜ 最后提交 2026-08-31</td></tr>
+      <tr><th>已实现模块</th><td><b>三端</b>：用户小程序（发帖/表白墙/匿名马甲、点赞评论、站内私信+WebSocket、<b>二手闲置（下单/订单）</b>、<b>跑腿互助</b>、<b>学校/校区绑定+学生认证</b>、钱包提现、举报、拉黑）+ 圈主商户端（内容管理/置顶/举报/敏感词/RBAC）+ 总管理后台（学校管理、审核、<b>内容安全对接腾讯云</b>、支付/提现/资金流水）</td></tr>
+      <tr><th>前后端 / 后台</th><td>前端有 / 后端有 / <b>后台有（两套）</b></td></tr>
+      <tr><th>可复用度</th><td><b>功能面最广的一个</b>（认证 + 闲置 + 跑腿 + 私聊 + 举报 + 后台全含，且自带多租户/多校区思路）。<b>但它不是「实名同校」模型，而是「同城多校 + 圈主运营 + 广告变现」，与《校集》「仅限本校」定位有偏差，且系统偏重、基于 PHP 而非你的 Java 方向</b></td></tr>
+      <tr><th>License</th><td class="pill warn">接口判为 NOASSERTION（README 写「可商用」，<b>但 License 文件需人工确认，不能只信 README 一句话</b>）</td></tr>
+      <tr><th>与《校集》匹配</th><td class="pill ok">认证/闲置/跑腿/私聊/后台可参考</td> <span class="pill risk">「广告位/佣金分成/多校圈主」与《校集》纯净校园定位不一致，需大量裁剪</span></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="repo"><span class="name">⑤ Junyao227/CJ-Transaction-Weapp（校园惠）</span><span class="pill warn">无 License</span><span class="pill warn">2025 后未更新</span></div>
+    <div class="lnk">https://github.com/Junyao227/CJ-Transaction-Weapp</div>
+    <table>
+      <tr><th>技术栈</th><td>uni-app（Vue）+ uView + <b>uniCloud 云开发</b>（JS 云函数）；含分包策略</td></tr>
+      <tr><th>社区数据</th><td class="num">Star 2 ｜ Fork 1 ｜ 最后提交 2025-04-04</td></tr>
+      <tr><th>已实现模块</th><td><b>校园二手 + 兼职 + 跑腿</b>三类（正好覆盖《校集》三个 Tab 方向）</td></tr>
+      <tr><th>前后端 / 后台</th><td>前端有 / 后端有（uniCloud）/ 后台无</td></tr>
+      <tr><th>可复用度</th><td>中——结构与《校集》多形态思路一致，但 Star 低、更新停在 2025，需评估代码完整度</td></tr>
+      <tr><th>License</th><td class="pill risk">无 License 文件 = <b>默认保留全部权利，法律上不可直接商用</b></td></tr>
+      <tr><th>与《校集》匹配</th><td class="pill ok">形态组合最像；<span class="pill warn">「兼职」模块要按《校集》红线裁剪（仅保留校内勤工俭学，去掉任何薪资代收/校外兼职）</span></td></tr>
+    </table>
+  </div>
+
+  <h3><span class="tag t2">Tier 2</span> 单模块高质量参考（跑腿 / 交易治理 / 失物）</h3>
+
+  <div class="grid">
+    <div class="card">
+      <div class="repo"><span class="name">⑥ landalfyao/ddrun（叮点跑腿）</span><span class="pill ok">MIT</span></div>
+      <div class="lnk">https://gitee.com/landalfyao/ddrun</div>
+      <p class="metric num"><b>Star 1219 ｜ Fork 470</b> ｜ 最后提交 2024-01-10</p>
+      <p><b>技术栈：</b>Node 后端 Midway3.0 + 后台 Nuxt2.x + 小程序 uni-app。全栈开源、可部署文档齐全。</p>
+      <p><b>模块：</b>帮送/帮买、骑手注册与接单、智能派单、动态计价（距离/重量）、优惠券、资金提现、企业微信通知。</p>
+      <p><b>复用：</b><span class="pill ok">跑腿这一块全网成熟度最高、生态最大</span>，跑腿 Tab 的模型设计值得直接借鉴。<b>但它是 Node 技术栈</b>，与你的 Java 方向不同；且含「钱包/提现」，上线前需评估资金合规。</p>
+    </div>
+
+    <div class="card">
+      <div class="repo"><span class="name">⑦ Karrecy/fuu-run（校园跑腿）</span><span class="pill risk">AGPL-3.0</span></div>
+      <div class="lnk">https://gitee.com/Karrecy/fuu-run</div>
+      <p class="metric num"><b>Star 109 ｜ Fork 41</b> ｜ 最后提交 2026-06-23</p>
+      <p><b>技术栈：</b><b>Spring Boot + Vue + uni-app</b>（前后端分离，父子 POM 多模块）。<b>与你的 Java 方向完全对口。</b></p>
+      <p><b>模块：</b>多角色（管理员/校区代理/跑腿员/用户）、下单接单、订单全生命周期、微信支付、余额提现、订单申诉/退款、实时沟通(WebSocket)、敏感词检测、微信订阅消息、多校区管理、OSS、系统监控。</p>
+      <p><b>复用：</b><span class="pill ok">跑腿全栈 + 后台 + 风控都齐</span>，Java 学习者最佳参考样本。</p>
+      <p><span class="pill risk">⚠️ 协议是 AGPL-3.0</span>：这是<b>强传染性协议</b>——你若基于它修改并对外提供网络服务，<b>必须把修改后的源码也以 AGPL 开源</b>。想闭源运营，这条是硬约束，需谨慎。</p>
+    </div>
+
+    <div class="card">
+      <div class="repo"><span class="name">⑧ bestxiangest/Goods-Trading-Center（CampusEcho）</span><span class="pill warn">无 License</span></div>
+      <div class="lnk">https://github.com/bestxiangest/Goods-Trading-Center</div>
+      <p class="metric num">Star 4 ｜ Fork 0 ｜ 最后提交 2026-07-16</p>
+      <p><b>技术栈：</b>Spring Boot 4 + Java 21 + PostgreSQL + JWT；前端 Vue 3 + TS。</p>
+      <p><b>模块：</b>物品交易状态机（DRAFT/ON_SALE/RESERVED/SOLD/OFF_SHELF）、<b>举报与内容治理分离</b>、<b>交易争议/管理员仲裁</b>、<b>信誉分（按评分均值）</b>、站内消息（交易状态/举报/仲裁自动通知）、后台概览。</p>
+      <p><b>复用：</b><span class="pill ok">《校集》第 11 条「交易/信用/纠纷仲裁」的最佳规则参考</span>——它的「争议仲裁 vs 普通举报」职责分离设计很值得抄。<b>但它不是小程序，是 Web 端</b>，只能借规则与后端设计。</p>
+    </div>
+
+    <div class="card">
+      <div class="repo"><span class="name">⑨ gongsir0630/LostAndFound（西柚失物招领）</span><span class="pill warn">无 License</span><span class="pill warn">2021 停更</span></div>
+      <div class="lnk">https://github.com/gongsir0630/LostAndFound</div>
+      <p class="metric num">Star 9 ｜ Fork 4 ｜ 最后提交 2021-03-03</p>
+      <p><b>技术栈：</b>小程序 Vue/uni-app + 后端 Java/SpringBoot/MySQL/Redis/百度云。</p>
+      <p><b>模块：</b>失物信息一览/检索、发布(图片)、<b>OCR 证件识别免输入</b>、证件消息订阅。</p>
+      <p><b>复用：</b>失物招领模块（《校集》第 8 条）现成参考；<span class="pill warn">代码太老（2021），仅作业务设计参考</span>。</p>
+    </div>
+
+    <div class="card">
+      <div class="repo"><span class="name">⑩ hongmaple/salted-fish（仿闲鱼）</span><span class="pill warn">无 License</span></div>
+      <div class="lnk">https://github.com/hongmaple/salted-fish</div>
+      <p class="metric num"><b>Star 28 ｜ Fork 5</b> ｜ 最后提交 2024-06-19</p>
+      <p><b>技术栈：</b>uni-app + Vue2（前端）+ PC 管理端（Vue3 + Element）。</p>
+      <p><b>模块：</b>宝贝发布/购买/留言/收藏/订单管理、发货管理；PC 端可做交易代理、宝贝审核、人员管理、分类管理。</p>
+      <p><b>复用：</b>二手交易 + <b>宝贝审核后台</b>的成熟参考（Star 数为二手类里较高）。<span class="pill warn">项目较老（基于 SSM 时代架构），后端非 Java 主流现代栈</span>。</p>
+    </div>
+
+    <div class="card">
+      <div class="repo"><span class="name">⑪ Fankekeke/delivery_order_cos（众包配送）</span><span class="pill warn">无 License</span></div>
+      <div class="lnk">https://github.com/Fankekeke/delivery_order_cos</div>
+      <p class="metric num">Star 8 ｜ Fork 0 ｜ 最后提交 2026-03-13</p>
+      <p><b>技术栈：</b>Spring Boot + Vue + 小程序。</p>
+      <p><b>模块：</b>众包接单、员工审核、收益/提现、订单投诉/评价、价格规则、配送排行、优惠券积分、社区论坛。</p>
+      <p><b>复用：</b>跑腿「接单者审核 + 收益结算 + 投诉」链路可参考（Java 栈）。</p>
+    </div>
+  </div>
+
+  <h3><span class="tag t3">Tier 3</span> 通用后台 / 商城脚手架（谨慎，含红线模块）</h3>
+  <div class="card">
+    <ul>
+      <li><b>nick-tan/tanxiaojian-BBS（谈校间，社区论坛）</b> — Apache-2.0，uni-app(Vue2) + SpringBoot + MyBatis-Plus + Redis + <b>若依</b>后台。发帖评论/热榜/搜索/举报/消息、实名认证、内容审核与关键词拦截。<span class="pill warn">README 明写「开源版不适合直接商用」</span>，且不允许再发行/出售。<b>价值：后台用若依、审核机制可参考；不要指望直接商用。</b> <span class="lnk">https://github.com/nick-tan/tanxiaojian-BBS</span></li>
+      <li><b>WayneHu6/school-market</b> — 16★，小程序 + Layui + Spring Boot。README 明确 <span class="pill risk">「仅用于学习交流，请勿商用」</span>。<b>只作学习参考，不要用于上线。</b></li>
+      <li><b>xu123asd-art/Campus-Second-hand-Trading-Platform</b>（0★）与 <b>Yhuiwen/campus-trade</b>（0★，Spring Boot 3 + Vue 3，含 <b>信用分 0-150</b>、Redis 缓存、规则版智能助手）— 都是课设级校园二手，<b>无 License</b>；<code>campus-trade</code> 的「信用分动态评价体系」设计值得借鉴。</li>
+      <li><b>CRMEB / 萤火商城 / Usecloud usemall</b>（含拼团、秒杀、优惠券、会员）— 生态成熟、Apache-2.0 等，<b>但普遍内置「分销裂变/多级分销」模块</b>，这正撞《校集》红线；且属重电商系统，与校园平台定位差异大。<span class="pill risk">不建议整体引入，只可借鉴「拼单/拼团」的交互</span>。</li>
+      <li><b>GitCode（AtomGit）</b> — 本次检索其搜索结果几乎为 0；站内相关仓库多为 AIGC 聚合搬运仓（如 <code>open-source-toolkit/ff2bb</code>、<code>Universal-Tool/bd38d</code>），无作者、无 License、无质量保障，<span class="pill risk">来源不可信，不建议采用</span>。该平台在本赛道的开源存量远不如 GitHub/Gitee。</li>
+    </ul>
+  </div>
+
+  <h2>三、技术栈取舍（三条路线，结合你的 Java 方向）</h2>
+  <table>
+    <tr><th style="width:120px">路线</th><th>组成</th><th>优点</th><th>代价 / 风险</th><th>适合</th></tr>
+    <tr>
+      <td><b>A. 原生 + 云开发</b></td>
+      <td>原生小程序 + 微信云开发（云函数/云数据库/云存储）</td>
+      <td>免服务器、免运维、上手最快；可直接用 Tier1 的 ②③</td>
+      <td>与 Java 后端学习方向脱节；云函数体量大后不好拆；复杂事务/担保资金流难做</td>
+      <td>想「先上线、先跑起来」</td>
+    </tr>
+    <tr>
+      <td><b>B. uni-app + Java 后端</b>（建议）</td>
+      <td>uni-app(Vue) 前端 + Spring Boot 后端 + Vue 后台管理</td>
+      <td><b>贴合你的 Java 方向，简历与学习价值高</b>；可直接复用 ⑦fuu-run / ⑪ 的 Java 全栈骨架与后台</td>
+      <td>要自己买服务器、部署、运维；工作量比 A 大</td>
+      <td>想「练工程能力 + 可控可扩展」</td>
+    </tr>
+    <tr>
+      <td><b>C. 混合</b></td>
+      <td>前端 uni-app/原生，先用云开发起步，后迁自建后端</td>
+      <td>分期降低启动成本</td>
+      <td>架构迁移有成本，接口层要提前抽象</td>
+      <td>时间紧但想兼顾学习</td>
+    </tr>
+  </table>
+  <p class="small">说明：《校集》含「担保交易/资金托管/信用分/纠纷仲裁」，这些<strong>涉及资金与状态机</strong>，用自建 Java 后端（含事务控制）比纯云开发更好实现与解释——这也是倾向路线 B 的原因。</p>
+
+  <h2>四、与《校集》红线的匹配矩阵（重点看这里）</h2>
+  <p class="small">《校集》红线：论文代写/毕设代做/代考、外卖售卖与餐饮交易、网贷与金融借贷、刷单与兼职诈骗、付费陪玩、多级分销。</p>
+  <table>
+    <tr><th>推荐项目</th><th>外卖/餐饮</th><th>付费陪玩</th><th>多级分销</th><th>借贷/金融</th><th>论文代写</th><th>处理建议</th></tr>
+    <tr><td>② secondHandMiniprogram</td><td>无</td><td>无</td><td>无</td><td>无</td><td>无</td><td class="pill ok">干净，可直接用</td></tr>
+    <tr><td>③ campus-market-wechat</td><td>无</td><td>无</td><td>无</td><td>无</td><td>无</td><td class="pill ok">干净</td></tr>
+    <tr><td>① who_family_wechat</td><td>无</td><td>无</td><td>无</td><td>无</td><td>无</td><td class="pill ok">干净</td></tr>
+    <tr><td>④ same-city-wall</td><td>需核查</td><td>无</td><td>无（有广告/佣金）</td><td>无</td><td>无</td><td class="pill warn">裁剪广告/佣金/多校模型</td></tr>
+    <tr><td>⑤ CJ-Transaction-Weapp</td><td>无</td><td>无</td><td>无</td><td>无</td><td>无</td><td class="pill warn">「兼职」需按红线下调为校内勤工俭学</td></tr>
+    <tr><td>⑥ ddrun（跑腿）</td><td class="pill risk">含帮买（可扩展到餐饮）</td><td>无</td><td>无</td><td class="pill warn">含钱包提现</td><td>无</td><td class="pill warn">关闭「帮买/餐饮」类目</td></tr>
+    <tr><td>⑦ fuu-run（跑腿）</td><td class="pill risk">含「餐食代购」文案</td><td>无</td><td>无</td><td class="pill warn">余额提现</td><td>无</td><td class="pill warn">去掉餐食代购；提现需合规评估</td></tr>
+    <tr><td>⑧ CampusEcho</td><td>无</td><td>无</td><td>无</td><td>无</td><td>无</td><td class="pill ok">干净，规则可借鉴</td></tr>
+    <tr><td>landalfyao/ddapp</td><td class="pill risk">含便利店</td><td class="pill risk"><b>含陪练陪玩</b></td><td>无</td><td class="pill warn">提现</td><td>无</td><td class="pill risk"><b>陪玩是明确红线，禁止启用该模块</b></td></tr>
+    <tr><td>CRMEB / 萤火 / usemall</td><td class="pill warn">可配置商品</td><td>无</td><td class="pill risk"><b>内置分销裂变</b></td><td class="pill warn">有充值/会员</td><td>无</td><td class="pill risk">分销是红线，不建议整体引入</td></tr>
+  </table>
+  <div class="box-ok"><b>共性结论：</b>绝大多数「校园二手/失物/社区」类模板本身是干净的，红线冲突主要出现在<b>跑腿类（餐食代购/陪玩）</b>和<b>电商类（分销）</b>。只要在二开时<b>砍掉这些模块并加关键词拦截</b>，即可满足《校集》红线。技能互助模块的<b>论文代写/毕设代做/代考关键词拦截，几乎没有任何模板自带，必须自建</b>。</div>
+
+  <h2>五、容易被忽略、但会决定「能不能上线」的硬门槛</h2>
+  <div class="box-risk">
+    <p><b>1. 主体类型：个人主体做不了《校集》。</b>《校集》含用户发布、信息平台、社区能力，微信社区类目<b>不对个人主体开放</b>；实测有开发者以个人身份做「校园二手市场」被驳回。<b>必须用企业或个体工商户主体注册小程序、开通微信支付。</b>（学生身份可通过注册个体工商户解决主体问题，但仍需合规材料。）</p>
+    <p><b>2. 类目与备案：</b>UGC + 交易 + 社区，通常需要 ① <b>ICP 备案</b>（主体与小程序一致）② <b>社交-社区/论坛类目</b>需《非经营性互联网信息服务备案核准》③ <b>平台型交易（撮合）</b>在部分口径下还需 ICP/EDI 许可证。<b>这些是「钱与法」层面的要求，务必以微信官方类目说明文档为准，我这里给的是核实到的公开口径，不做最终承诺。</b></p>
+    <p><b>3. 内容安全是硬要求：</b>UGC 必须接微信 <code>msgSecCheck</code>（文本）+ <code>mediaCheckAsync</code>（图片），并保留<b>人工复核</b>；否则一旦出现违规内容，主体会被追责甚至封号。②③⑧ 三个项目已内置这套，是它们的加分项。</p>
+    <p><b>4. 强制登录会被驳回：</b>首页要免登录可浏览，登录拦截放在需要操作时。二手平台常见驳回点。</p>
+  </div>
+  <p class="small">口径来源：微信开放社区/服务市场官方问答 + 开发者社区类目问题汇总（2025~2026）。<b>如需，我可以再单独做一次「以官方类目文档为准」的逐条核对</b>，把每个类目对应的资质清单列成表。</p>
+
+  <h2>六、落地建议（一期怎么拼）</h2>
+  <table>
+    <tr><th style="width:150px">《校集》一期模块</th><th>建议取材</th></tr>
+    <tr><td>用户认证（学号校验）</td><td>③ campus-market-wechat 的「学号规则校验 + 认证标识」</td></tr>
+    <tr><td>首页聚合 + 搜索 + 筛选 + 发布入口</td><td>① who_family_wechat 的页面骨架 + ② 的瀑布流/搜索</td></tr>
+    <tr><td>二手闲置（含教材专区）</td><td>② secondHandMiniprogram（含租赁）或 ③</td></tr>
+    <tr><td>物品租赁</td><td>② 已含「租期」逻辑，直接改</td></tr>
+    <tr><td>跑腿代办</td><td>⑦ fuu-run（Java 栈，含派单/状态机/后台）</td></tr>
+    <tr><td>失物招领</td><td>⑨ LostAndFound 的业务设计</td></tr>
+    <tr><td>担保交易 / 信用分 / 纠纷仲裁</td><td>⑧ CampusEcho 的规则与状态机（需自己落到小程序）</td></tr>
+    <tr><td>举报与内容审核</td><td>③（举报阈值+黑名单+后台）或 ④（腾讯云内容安全）</td></tr>
+    <tr><td>消息系统</td><td>② 的云数据库实时聊天 / ④ 的 WebSocket</td></tr>
+    <tr><td>后台管理</td><td>③ 的小程序内后台；正式后台用 ⑦ 的 Vue 后台或若依（⑪/tanxiaojian）</td></tr>
+    <tr><td>技能互助 / 校园拼单</td><td><b>无现成模板，需自建</b>（技能互助参考 ⑤ 的形态；拼单可借鉴电商拼团交互）</td></tr>
+  </table>
+
+  <h2>七、风险提示（务必读）</h2>
+  <ul>
+    <li><b>Star 与数据会变</b>：本报告数字为 2026-10-14 的实时接口值，后续会变动，决策前请以仓库页面为准。</li>
+    <li><b>License 是硬约束</b>：<span class="pill risk">无 License ≠ 免费商用</span>（默认保留全部权利）；<span class="pill risk">AGPL-3.0（⑦）有强传染性</span>，闭源商用前必须评估；README 写「可商用」不等于 License 授权，以 LICENSE 文件为准。</li>
+    <li><b>代码原创性无法保证</b>：部分校园二手模板存在同源/搬运可能，商用前建议做一次原创性与合规人工核查。</li>
+    <li><b>多数项目是课设级</b>：安全（越权、SQL 注入、鉴权漏洞）、并发、支付可靠性普遍未达商用标准，直接上线风险高——需按商用标准加固（这属于我擅长的范畴，可另起一轮做体检）。</li>
+  </ul>
+
+  <div class="foot">
+    本报告由甄全栈（微信小程序全栈开发工程师）出具 ｜ 数据核实时间 2026-10-14 ｜ 检索平台：GitHub、Gitee、GitCode(AtomGit) ｜ 所有 Star/Fork/License/更新时间均来自各平台接口实时查询。<br>
+    合规口径（主体、类目、备案）来自微信开放社区公开问答，最终以微信官方类目与资质说明文档为准。
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "_comment": "本地联调样例（edu.fixture-dir 指向本目录才生效；生产 jar 不包含，配置为空时接口直接报错，不会返回示例数据）",
+  "academicYear": "2026-2027",
+  "termNo": 1,
+  "weekCount": 20,
+  "courses": [
+    { "name": "智能嵌入式系统设计", "teacher": "李伟", "room": "教2-512", "day": 2, "startPeriod": 1, "endPeriod": 2, "weeks": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16], "color": "lavender" },
+    { "name": "信息安全全概论", "teacher": "陈静", "room": "教5-202", "day": 2, "startPeriod": 3, "endPeriod": 4, "weeks": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16], "color": "sage" },
+    { "name": "计算机图形学", "teacher": "黄强", "room": "教1-316", "day": 2, "startPeriod": 6, "endPeriod": 7, "weeks": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16], "color": "blue" },
+    { "name": "机器学习", "teacher": "吴敏", "room": "教1-314", "day": 2, "startPeriod": 8, "endPeriod": 9, "weeks": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16], "color": "cream" },
+
+    { "name": "软件工程", "teacher": "张晓东", "room": "教4-312", "day": 3, "startPeriod": 3, "endPeriod": 4, "weeks": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16], "color": "lavender" },
+    { "name": "数据库系统实验", "teacher": "刘洋", "room": "工1-408", "day": 3, "startPeriod": 5, "endPeriod": 8, "weeks": [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17], "color": "slate" },
+
+    { "name": "数据库系统", "teacher": "刘洋", "room": "教5-107", "day": 4, "startPeriod": 3, "endPeriod": 4, "weeks": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16], "color": "sage" },
+    { "name": "Linux技术", "teacher": "郑凯", "room": "教3-309", "day": 4, "startPeriod": 6, "endPeriod": 7, "weeks": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16], "color": "cream" },
+    { "name": "计算机系统结构", "teacher": "何伟", "room": "教3-307", "day": 4, "startPeriod": 8, "endPeriod": 9, "weeks": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16], "color": "mint" },
+
+    { "name": "习近平新时代中国特色社会主义思想概论", "teacher": "王丽", "room": "教1-314", "day": 5, "startPeriod": 3, "endPeriod": 4, "weeks": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16], "color": "olive" },
+    { "name": "匹克球", "teacher": "赵鹏", "room": "体育馆-3", "day": 6, "startPeriod": 8, "endPeriod": 11, "weeks": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16], "color": "tan" },
+    { "name": "智能芯片原理与应用", "teacher": "孙帆", "room": "教1-403", "day": 5, "startPeriod": 8, "endPeriod": 9, "weeks": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16], "color": "pink" },
+
+    { "name": "大数据技术基础", "teacher": "周涛", "room": "教4-312", "day": 6, "startPeriod": 3, "endPeriod": 4, "weeks": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16], "color": "sand" }
+  ]
+}

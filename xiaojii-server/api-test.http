@@ -1,0 +1,35 @@
+### 1. 不传 code（预期：HTTP 200 + code 400 + "微信登录凭证不能为空"）
+POST http://localhost:8080/api/app/auth/login
+Content-Type: application/json
+
+{"nickname":"xiaoming"}
+
+### 2. code 传空字符串（预期：code 400）
+POST http://localhost:8080/api/app/auth/login
+Content-Type: application/json
+
+{"code":""}
+
+### 3. code 传一个空格（预期：code 400，被 @NotBlank 拦）
+POST http://localhost:8080/api/app/auth/login
+Content-Type: application/json
+
+{"code":" "}
+
+### 4. code 有值但无效（预期：code 1001 + "登录凭证已失效"）
+POST http://localhost:8080/api/app/auth/login
+Content-Type: application/json
+
+{"code":"abcdefg"}
+
+### 5. nickname 超 32 字（预期：code 400，被 @Size 拦）
+POST http://localhost:8080/api/app/auth/login
+Content-Type: application/json
+
+{"code":"abcdefg","nickname":"一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三"}
+
+### 6. 开发登录（预期：code 0 + 返回 token，需 dev-login-enabled=true）
+POST http://localhost:8080/api/app/auth/dev-login
+Content-Type: application/json
+
+{"openid":"dev_test_01","nickname":"测试同学"}

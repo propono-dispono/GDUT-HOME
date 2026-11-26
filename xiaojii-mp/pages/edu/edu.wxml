@@ -1,0 +1,285 @@
+<!-- 教务中心（课表/成绩/考试） —— 页面结构 -->
+<view class="app">
+
+  <view class="appbar" style="height:{{appbarH}}px;padding-top:{{safeTop}}px;padding-right:{{capsuleRight}}px">
+    <view class="iconbtn" hover-class="iconbtn-hv" bindtap="onBack">
+      <view class="ic ic-i-back"></view>
+    </view>
+    <text class="appbar-title">教务中心</text>
+    <view class="appbar-spacer"></view>
+    <view wx:if="{{status.loggedIn}}" class="btn btn--text btn--sm" hover-class="btn-hv" bindtap="onRefresh">刷新</view>
+    <view wx:if="{{status.loggedIn}}" class="btn btn--text btn--sm" hover-class="btn-hv" bindtap="onLogout">退出</view>
+  </view>
+
+  <!-- ============ 加载中 ============ -->
+  <view wx:if="{{loading}}" class="empty">
+    <view class="empty-title">加载中…</view>
+  </view>
+
+  <!-- ============ 未登录 ============ -->
+  <scroll-view wx:elif="{{!status.loggedIn}}" class="app-main" scroll-y enable-flex>
+    <view class="empty edu-gate">
+      <view class="empty-ico"><view class="ic ic-i-shield ic--lg"></view></view>
+      <view class="empty-title">还没有登录教务</view>
+      <view class="empty-desc">用学号 + 密码 + 验证码登录广工教务，才能看到课表、成绩和考试安排</view>
+      <view class="btn btn--primary btn--sm mt-4" hover-class="btn-hv" bindtap="onLogin">去登录</view>
+    </view>
+  </scroll-view>
+
+  <!-- ============ 已登录 ============ -->
+  <block wx:else>
+    <view class="tabs">
+      <view class="tab {{tab === 'schedule' ? 'tab--on' : ''}}" data-k="schedule" bindtap="onTab">课表</view>
+      <view class="tab {{tab === 'score' ? 'tab--on' : ''}}" data-k="score" bindtap="onTab">成绩</view>
+      <view class="tab {{tab === 'exam' ? 'tab--on' : ''}}" data-k="exam" bindtap="onTab">考试</view>
+    </view>
+
+    <!-- ---------------- 课表 ---------------- -->
+    <view wx:if="{{tab === 'schedule'}}" class="tt-wrap">
+
+      <view class="tt-meta">
+        <text class="tt-meta-term">{{term.termName || '本学期'}}</text>
+        <text wx:if="{{term.campus}}" class="tag tag--soft">{{term.campus}}</text>
+        <text wx:if="{{fixture}}" class="tag tag--accent">本地样例</text>
+        <view class="grow"></view>
+        <text wx:if="{{stale}}" style="font-size:22rpx;color:#B45309;margin-right:10rpx">可能不是最新</text>
+        <text class="tt-meta-week">第 {{week}} 周<text wx:if="{{fetchedAt}}" style="font-size:20rpx;opacity:.55"> · {{fetchedAt}} 更新</text></text>
+      </view>
+
+      <!-- 周选择 + 星期表头 -->
+      <view class="tt-head">
+        <view class="tt-weeknav">
+          <view class="tt-arrow" hover-class="btn-hv" bindtap="onPrevWeek">‹</view>
+          <view class="tt-weekbox">
+            <text class="tt-week">{{week}}周</text>
+            <text class="tt-month">{{days[0].month}}月</text>
+          </view>
+          <view class="tt-arrow" hover-class="btn-hv" bindtap="onNextWeek">›</view>
+        </view>
+        <view class="tt-days">
+          <view
+            class="tt-day {{item.isToday ? 'is-today' : ''}}"
+            wx:for="{{days}}"
+            wx:key="day"
+            bindtap="onDayTap"
+            data-today="{{item.isToday}}"
+          >
+            <text class="tt-wd">{{item.wd}}</text>
+            <view class="tt-date {{item.isToday ? 'tt-date--on' : ''}}">{{item.date}}</view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 课表网格：整学期一次渲染，左右滑动切周（⛔ 勿把 swiper 换成单周网格） -->
+      <view wx:if="{{ttLoading}}" class="empty"><view class="empty-title">课表加载中…</view></view>
+
+      <view wx:elif="{{ttErr}}" class="empty">
+        <view class="empty-ico"><view class="ic ic-i-inbox ic--lg"></view></view>
+        <view class="empty-title">{{ttErr}}</view>
+        <view wx:if="{{needLogin}}" class="btn btn--primary btn--sm mt-4" bindtap="onRelogin">重新登录教务</view>
+        <view wx:else class="btn btn--ghost btn--sm mt-4" bindtap="onRetry">重试</view>
+      </view>
+
+      <swiper
+        wx:else
+        class="tt-swiper"
+        current="{{week - 1}}"
+        bindchange="onSwiperChange"
+        duration="240"
+      >
+        <swiper-item wx:for="{{weekPanels}}" wx:key="week">
+          <scroll-view class="tt-body" scroll-y enable-flex>
+            <view class="tt-grid" style="height:{{gridH}}rpx">
+              <view class="tt-gutter" style="width:{{gutterW}}rpx">
+                <view
+                  class="tt-gutter-cell"
+                  wx:for="{{periodNos}}"
+                  wx:key="*this"
+                  style="height:{{rowH}}rpx"
+                >{{item}}</view>
+              </view>
+
+              <view class="tt-canvas" style="left:{{gutterW}}rpx;height:{{gridH}}rpx">
+                <view
+                  class="tt-line"
+                  wx:for="{{periodNos}}"
+                  wx:key="*this"
+                  style="top:{{(item - 1) * rowH}}rpx;height:{{rowH}}rpx"
+                ></view>
+
+                <view
+                  class="tt-block {{blk.tight ? 'is-tight' : ''}} {{blk.conflict ? 'is-conflict' : ''}}"
+                  wx:for="{{item.blocks}}"
+                  wx:for-item="blk"
+                  wx:key="id"
+                  style="{{blk.style}}"
+                  hover-class="tt-block-hv"
+                  data-id="{{blk.id}}"
+                  bindtap="onCourseTap"
+                >
+                  <text class="tt-block-name">{{blk.name}}</text>
+                  <text class="tt-block-room">{{blk.room}}</text>
+                </view>
+
+                <view wx:if="{{!item.blocks.length}}" class="tt-empty">
+                  <text class="tt-empty-text">本周没有课</text>
+                </view>
+              </view>
+            </view>
+          </scroll-view>
+        </swiper-item>
+      </swiper>
+    </view>
+
+    <!-- ---------------- 成绩 ---------------- -->
+    <scroll-view wx:elif="{{tab === 'score'}}" class="app-main" scroll-y enable-flex>
+      <view wx:if="{{scLoading}}" class="empty"><view class="empty-title">成绩加载中…</view></view>
+
+      <view wx:elif="{{scErr}}" class="empty">
+        <view class="empty-ico"><view class="ic ic-i-inbox ic--lg"></view></view>
+        <view class="empty-title">{{scErr}}</view>
+      </view>
+
+      <block wx:else>
+        <view class="sc-summary">
+          <view class="sc-gpa">
+            <text class="sc-gpa-num">{{stats.gpaText}}</text>
+            <text class="sc-gpa-label">平均学分绩点</text>
+          </view>
+          <view class="sc-metrics">
+            <view class="sc-metric">
+              <text class="sc-metric-n">{{stats.creditText}}</text>
+              <text class="sc-metric-l">总学分</text>
+            </view>
+            <view class="sc-metric">
+              <text class="sc-metric-n">{{stats.earnedText}}</text>
+              <text class="sc-metric-l">已修学分</text>
+            </view>
+            <view class="sc-metric">
+              <text class="sc-metric-n">{{stats.courseCount}}</text>
+              <text class="sc-metric-l">课程数</text>
+            </view>
+          </view>
+          <view wx:if="{{fixture}}" class="sc-fixture">当前为本地样例数据，接入真实成绩后自动替换</view>
+        </view>
+
+        <view class="segmented sc-seg">
+          <button class="{{scMode === 'term' ? 'on' : ''}}" data-mode="term" bindtap="onScoreMode">按学期</button>
+          <button class="{{scMode === 'year' ? 'on' : ''}}" data-mode="year" bindtap="onScoreMode">按学年</button>
+          <button class="{{scMode === 'grade' ? 'on' : ''}}" data-mode="grade" bindtap="onScoreMode">按年级</button>
+        </view>
+
+        <!-- 按学期 -->
+        <block wx:if="{{scMode === 'term'}}">
+          <view class="sc-term" wx:for="{{terms}}" wx:key="key">
+            <view class="sc-term-head" data-key="{{item.key}}" bindtap="onTermToggle">
+              <view class="grow">
+                <view class="sc-term-name">{{item.termName}}</view>
+                <view class="text-3">{{item.courseCount}} 门 · {{item.creditText}} 学分</view>
+              </view>
+              <view class="sc-term-gpa">{{item.gpaText}}</view>
+              <view class="ic ic--sm ic-i-chev sc-chev {{openTerm === item.key ? 'is-open' : ''}}"></view>
+            </view>
+
+            <view wx:if="{{openTerm === item.key}}" class="sc-courses">
+              <view class="sc-course" wx:for="{{item.courses}}" wx:for-item="c" wx:key="name">
+                <view class="grow">
+                  <view class="sc-course-name">{{c.name}}</view>
+                  <view class="text-3">{{c.nature}} · {{c.examType}} · {{c.credit}} 学分</view>
+                </view>
+                <view class="sc-course-score {{c.passed ? '' : 'is-fail'}}">{{c.score}}</view>
+                <view class="sc-course-point">{{c.point == null ? '--' : c.point}}</view>
+              </view>
+            </view>
+          </view>
+        </block>
+
+        <!-- 按学年 / 按年级 -->
+        <block wx:else>
+          <view wx:if="{{!groupRows.length}}" class="empty">
+            <view class="empty-desc">个人资料里的「年级」填上后，这里会按年级汇总</view>
+          </view>
+          <view wx:else class="sc-group">
+            <view class="sc-group-row" wx:for="{{groupRows}}" wx:key="key">
+              <view class="grow">
+                <view class="sc-term-name">{{item.label}}</view>
+                <view class="text-3">{{item.courseCount}} 门 · {{item.creditText}} 学分</view>
+              </view>
+              <view class="sc-term-gpa">{{item.gpaText}}</view>
+            </view>
+          </view>
+        </block>
+
+        <view class="sc-foot">GPA = Σ(学分 × 绩点) / Σ学分；绩点优先取教务口径，缺失时按「成绩≥60 → (成绩-50)/10」换算，上限 5.0。</view>
+      </block>
+    </scroll-view>
+
+    <!-- ---------------- 考试 ---------------- -->
+    <scroll-view wx:else class="app-main" scroll-y enable-flex>
+      <view wx:if="{{exLoading}}" class="empty"><view class="empty-title">考试安排加载中…</view></view>
+
+      <view wx:elif="{{exErr}}" class="empty">
+        <view class="empty-ico"><view class="ic ic-i-inbox ic--lg"></view></view>
+        <view class="empty-title">{{exErr}}</view>
+      </view>
+
+      <view wx:elif="{{!exams.length}}" class="empty">
+        <view class="empty-ico"><view class="ic ic-i-inbox ic--lg"></view></view>
+        <view class="empty-title">暂无考试安排</view>
+      </view>
+
+      <view wx:else>
+        <!-- 考试筛选：全部 / 未考 / 已考（⛔ 勿删，用户明确要的区分入口） -->
+        <view class="ex-filter">
+          <view class="ex-filter-item {{exFilter === 'all' ? 'is-on' : ''}}" data-k="all" bindtap="onExFilter">全部 {{exTotal}}</view>
+          <view class="ex-filter-item {{exFilter === 'todo' ? 'is-on' : ''}}" data-k="todo" bindtap="onExFilter">未考 {{exTodo}}</view>
+          <view class="ex-filter-item {{exFilter === 'done' ? 'is-on' : ''}}" data-k="done" bindtap="onExFilter">已考 {{exDone}}</view>
+        </view>
+
+        <view class="ex-list">
+          <view wx:if="{{!examsShown.length}}" class="empty">
+            <view class="empty-title">{{exFilter === 'todo' ? '没有待考的科目' : '这一栏暂时没有记录'}}</view>
+          </view>
+          <view class="ex-item" wx:for="{{examsShown}}" wx:key="name">
+          <view class="ex-date {{item.passed ? 'is-passed' : ''}}">
+            <text class="ex-date-month">{{item.monthText}}</text>
+            <text class="ex-date-day">{{item.dayText}}</text>
+          </view>
+          <view class="grow">
+            <view class="ex-name">{{item.name}}</view>
+            <view class="text-3 ex-line">{{item.timeText}}</view>
+            <view class="text-3 ex-line">{{item.metaText}}</view>
+          </view>
+            <text class="tag {{item.soon ? 'tag--solid' : 'tag--outline'}}">{{item.passed ? '已考' : (item.daysLeft === 0 ? '今天' : item.daysLeft + '天后')}}</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </block>
+
+  <!-- ============ 课程详情 ============ -->
+  <view wx:if="{{sheet}}" class="edu-scrim" bindtap="onCloseSheet">
+    <view class="edu-sheet" catchtap="noop">
+      <view class="sheet-handle"></view>
+      <view class="edu-sheet-title">{{sheet.name}}</view>
+      <view class="edu-sheet-row">
+        <text class="edu-sheet-k">节次</text>
+        <text class="edu-sheet-v">{{sheet.periodText}} · {{sheet.weekText}}</text>
+      </view>
+      <view class="edu-sheet-row" wx:if="{{sheet.timeText}}">
+        <text class="edu-sheet-k">上课时间</text>
+        <text class="edu-sheet-v">{{sheet.timeText}}</text>
+      </view>
+      <view class="edu-sheet-row">
+        <text class="edu-sheet-k">教室</text>
+        <text class="edu-sheet-v">{{sheet.room || '未排教室'}}</text>
+      </view>
+      <view class="edu-sheet-row">
+        <text class="edu-sheet-k">教师</text>
+        <text class="edu-sheet-v">{{sheet.teacher || '未标注'}}</text>
+      </view>
+      <view class="btn btn--primary btn--block mt-4" hover-class="btn-hv" bindtap="onCloseSheet">知道了</view>
+    </view>
+  </view>
+
+</view>

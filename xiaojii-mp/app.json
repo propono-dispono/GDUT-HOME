@@ -1,0 +1,31 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/list/list",
+    "pages/detail/detail",
+    "pages/mine/mine",
+    "pages/publish/publish",
+    "pages/posts/posts",
+    "pages/category/category",
+    "pages/verify/verify",
+    "pages/messages/messages",
+    "pages/notice/notice",
+    "pages/chat/chat",
+    "pages/favorites/favorites",
+    "pages/settings/settings",
+    "pages/profile-edit/profile-edit",
+    "pages/user/user",
+    "pages/edu/edu",
+    "pages/edu/login/login"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "backgroundColor": "#F5F5F6",
+    "backgroundTextStyle": "dark",
+    "navigationBarTextStyle": "black"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents",
+  "permission": {}
+}

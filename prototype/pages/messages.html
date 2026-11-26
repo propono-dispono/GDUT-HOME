@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>消息 · 校集</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="appbar">
+    <span class="appbar-title">消息</span>
+  </header>
+
+  <main class="app-main">
+
+    <nav class="entrygrid" id="entries"></nav>
+
+    <div class="section-title">私信</div>
+    <div id="sessions"></div>
+
+    <div style="height:var(--s6)"></div>
+  </main>
+
+  <nav id="tabbar"></nav>
+</div>
+
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/ui.js"></script>
+<script>
+(function () {
+  UI.shell();
+  UI.tabbar('messages');
+
+  var entries = [
+    { i: 'i-heart', t: '收到的赞', dot: true },
+    { i: 'i-chat',  t: '互动消息', dot: false },
+    { i: 'i-bell',  t: '系统通知', dot: false },
+    { i: 'i-shield', t: '审核结果', dot: false }
+  ];
+  document.getElementById('entries').innerHTML = entries.map(function (e) {
+    return '<a href="#" data-toast="' + e.t + '：该模块在下一批接入">'
+      + UI.icon(e.i) + '<span>' + e.t + '</span>'
+      + (e.dot ? '<i class="badge-dot"></i>' : '') + '</a>';
+  }).join('');
+
+  UI.renderSessions(document.getElementById('sessions'));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!-- 他人主页 —— 页面结构 -->
+<import src="../../templates/card.wxml" />
+
+<view class="app">
+
+  <view class="appbar" style="height:{{appbarH}}px;padding-top:{{safeTop}}px;padding-right:{{capsuleRight}}px">
+    <view class="iconbtn" hover-class="iconbtn-hv" bindtap="onBack">
+      <view class="ic ic-i-back"></view>
+    </view>
+    <text class="appbar-title">主页</text>
+  </view>
+
+  <scroll-view class="app-main" scroll-y enable-flex>
+
+    <view wx:if="{{loading}}" class="empty"><view class="empty-title">加载中…</view></view>
+
+    <block wx:elif="{{user}}">
+      <view class="section">
+        <view class="profile">
+          <image
+            wx:if="{{user.avatar}}"
+            class="avatar avatar--xl"
+            src="{{user.avatar}}"
+            mode="aspectFill"
+          ></image>
+          <image
+            wx:else
+            class="avatar avatar--xl"
+            src="{{avatarPath}}"
+            mode="aspectFill"
+          ></image>
+          <view class="grow">
+            <view class="profile-name">{{nickname}}</view>
+            <view class="profile-sub row gap-2">
+              <text class="tag {{verified ? 'tag--solid' : 'tag--outline'}}">{{verified ? '已认证' : '未认证'}}</text>
+              <text class="ellipsis">信用分 {{credit}}</text>
+            </view>
+          </view>
+        </view>
+        <view wx:if="{{meta || intro || tags.length || availableTime || lookingText}}" class="user-extra">
+          <view wx:if="{{meta}}" class="text-3 user-meta">{{meta}}</view>
+          <view wx:if="{{intro}}" class="user-bio">{{intro}}</view>
+          <view wx:if="{{tags.length}}" class="user-tags">
+            <text class="tag tag--outline" wx:for="{{tags}}" wx:key="*this">{{item}}</text>
+          </view>
+          <view wx:if="{{availableTime}}" class="user-line">
+            <text class="user-line-k">可互助时间</text>
+            <text class="user-line-v">{{availableTime}}</text>
+          </view>
+          <view wx:if="{{lookingText}}" class="user-line">
+            <text class="user-line-k">想找</text>
+            <text class="user-line-v">{{lookingText}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="section-title mt-3">TA 的发布</view>
+      <view class="feed">
+        <block wx:if="{{list.length > 0}}">
+          <template is="card" wx:for="{{list}}" wx:key="id" data="{{item: item}}" />
+        </block>
+        <view class="empty" wx:else>
+          <view class="empty-ico"><view class="ic ic-i-inbox ic--lg"></view></view>
+          <view class="empty-title">还没有公开的内容</view>
+        </view>
+      </view>
+    </block>
+
+    <view wx:else class="empty">
+      <view class="empty-title">{{errMsg || '加载失败'}}</view>
+    </view>
+
+  </scroll-view>
+
+</view>

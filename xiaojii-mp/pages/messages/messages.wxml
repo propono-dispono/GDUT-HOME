@@ -1,0 +1,83 @@
+<!-- messages页 —— 页面结构 -->
+<import src="../../templates/tabbar.wxml" />
+
+<view class="app">
+
+  <view class="appbar appbar--plain" style="height:{{appbarH}}px;padding-top:{{safeTop}}px;padding-right:{{capsuleRight}}px">
+    <text class="appbar-title">消息</text>
+    <view class="appbar-spacer"></view>
+    <text class="msg-readall" wx:if="{{unreadCount > 0}}" bindtap="onReadAll">全部已读</text>
+  </view>
+
+  <scroll-view class="app-main" scroll-y enable-flex>
+
+    <!-- 分类筛选：参考电商消息中心，先分区再看细节 -->
+    <view class="msg-filters">
+      <view class="msg-filter {{filter === 'all' ? 'is-on' : ''}}" data-k="all" bindtap="onFilter">全部</view>
+      <view class="msg-filter {{filter === 'chat' ? 'is-on' : ''}}" data-k="chat" bindtap="onFilter">私信 {{cntChat}}</view>
+      <view class="msg-filter {{filter === 'notice' ? 'is-on' : ''}}" data-k="notice" bindtap="onFilter">通知 {{cntNotice}}</view>
+    </view>
+
+    <!-- 私信：同一个人的多条提醒合成一条，点进去继续聊 -->
+    <view wx:if="{{(filter === 'all' || filter === 'chat') && chatGroups.length}}" class="msg-block">
+      <view class="msg-block-title">私信</view>
+      <view
+        class="msg-chat"
+        wx:for="{{chatGroups}}"
+        wx:key="sessionId"
+        hover-class="rowlink-hv"
+        data-sid="{{item.sessionId}}"
+        bindtap="onChatGroup"
+      >
+        <image class="avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+        <view class="grow">
+          <view class="msg-head">
+            <text class="msg-title ellipsis">{{item.peerName}}</text>
+            <text class="msg-time">{{item.at}}</text>
+          </view>
+          <view class="msg-chat-sub ellipsis">{{item.preview}}</view>
+        </view>
+        <text wx:if="{{item.unread}}" class="msg-badge">{{item.unread}}</text>
+      </view>
+    </view>
+
+    <!-- 通知：审核、系统等，一条一条列，点开看全文 -->
+    <view wx:if="{{(filter === 'all' || filter === 'notice') && notices.length}}" class="msg-block">
+      <view class="msg-block-title">通知</view>
+      <view
+        class="msg-row {{item.read ? '' : 'msg-row--unread'}}"
+        wx:for="{{notices}}"
+        wx:key="id"
+        hover-class="rowlink-hv"
+        data-i="{{index}}"
+        bindtap="onTap"
+      >
+        <view class="msg-ico">
+          <view class="ic ic-{{item._icon}}"></view>
+        </view>
+        <view class="grow">
+          <view class="msg-head">
+            <text class="msg-title ellipsis">{{item.title}}</text>
+            <text class="msg-time">{{item.createdAt}}</text>
+          </view>
+          <view class="msg-body clamp-2">{{item.content}}</view>
+          <view class="msg-tag">{{item.typeText}}</view>
+        </view>
+        <view class="msg-dot" wx:if="{{!item.read}}"></view>
+      </view>
+    </view>
+
+    <view class="empty" wx:if="{{loading}}">
+      <view class="empty-title">加载中…</view>
+    </view>
+
+    <view class="empty" wx:elif="{{!chatGroups.length && !notices.length}}">
+      <view class="empty-ico"><view class="ic ic-i-bell ic--lg"></view></view>
+      <view class="empty-title">{{errMsg || '还没有消息'}}</view>
+      <view class="empty-desc">审核结果、私信消息都会通知到这里</view>
+    </view>
+
+  </scroll-view>
+
+  <template is="tabbar" data="{{active: 'messages', unread: unreadCount}}" />
+</view>

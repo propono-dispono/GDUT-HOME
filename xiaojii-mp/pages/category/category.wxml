@@ -1,0 +1,44 @@
+<!-- category页 —— 页面结构 -->
+<import src="../../templates/tabbar.wxml" />
+
+<view class="app">
+
+  <view class="appbar appbar--plain" style="height:{{appbarH}}px;padding-top:{{safeTop}}px;padding-right:{{capsuleRight}}px">
+    <text class="appbar-title">分类</text>
+  </view>
+
+  <scroll-view class="app-main" scroll-y enable-flex>
+
+    <view wx:if="{{loading}}" class="empty"><view class="empty-title">加载中…</view></view>
+
+    <view wx:elif="{{!groups.length}}" class="empty">
+      <view class="empty-ico"><view class="ic ic-i-inbox ic--lg"></view></view>
+      <view class="empty-title">{{errMsg || '暂无分类'}}</view>
+      <view class="empty-desc">请检查后端是否正常</view>
+    </view>
+
+    <block wx:else>
+      <view wx:for="{{groups}}" wx:key="biz">
+        <view class="cat-head" data-biz="{{item.biz}}" bindtap="onBizAll">
+          <text class="section-title cat-title">{{item.label}}</text>
+          <text class="text-3 cat-all">全部 ›</text>
+        </view>
+        <view class="chips chips--wrap cat-chips">
+          <view
+            class="chip"
+            wx:for="{{item.items}}"
+            wx:for-item="cat"
+            wx:key="id"
+            data-biz="{{item.biz}}"
+            data-cat="{{cat.id}}"
+            bindtap="onCategory"
+          >{{cat.label}}</view>
+        </view>
+      </view>
+      <view style="height:32rpx"></view>
+    </block>
+
+  </scroll-view>
+
+  <template is="tabbar" data="{{active: 'category', unread: unreadCount}}" />
+</view>

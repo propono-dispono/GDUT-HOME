@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>组件规格 · 校集</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+</head>
+<body>
+
+<div class="spec">
+  <header class="spec-hd">
+    <h1>校集 · 组件规格 <span class="tag tag--outline">B1 地基</span></h1>
+    <p>
+      单主题（白色）设计系统验收页。<br>
+      验收要点 —— ① 颜色只走令牌，CSS/HTML 内不得出现颜色字面量；② 正文对比度 ≥ 4.5；③ 凸起按钮不被裁切；④ 字号只用 6 档。
+    </p>
+    </div>
+  </header>
+
+  <div class="spec-grid">
+    <section class="spec-panel">
+      <div class="spec-panel-hd">组件清单</div>
+      <div class="spec-body" data-slot></div>
+    </section>
+  </div>
+</div>
+
+<!-- ============ 组件模板：注入到两个面板 ============ -->
+<template id="tpl">
+  <div>
+    <div class="spec-label">色板（语义层）</div>
+    <div class="spec-swatch">
+      <div class="spec-sw"><div class="spec-sw-c" data-bg="--bg"></div><div class="spec-sw-t">--bg</div></div>
+      <div class="spec-sw"><div class="spec-sw-c" data-bg="--surface"></div><div class="spec-sw-t">--surface</div></div>
+      <div class="spec-sw"><div class="spec-sw-c" data-bg="--surface-2"></div><div class="spec-sw-t">--surface-2</div></div>
+      <div class="spec-sw"><div class="spec-sw-c" data-bg="--surface-3"></div><div class="spec-sw-t">--surface-3</div></div>
+      <div class="spec-sw"><div class="spec-sw-c" data-bg="--ink"></div><div class="spec-sw-t">--ink</div></div>
+      <div class="spec-sw"><div class="spec-sw-c" data-bg="--ink-3"></div><div class="spec-sw-t">--ink-3</div></div>
+      <div class="spec-sw"><div class="spec-sw-c" data-bg="--line"></div><div class="spec-sw-t">--line</div></div>
+      <div class="spec-sw"><div class="spec-sw-c" data-bg="--accent"></div><div class="spec-sw-t">--accent</div></div>
+    </div>
+  </div>
+
+  <div>
+    <div class="spec-label">字阶（只用这 6 档）</div>
+    <div class="text-1" style="font-size:var(--fs-24)">28 / 700　价格与关键数字</div>
+    <div class="text-1" style="margin-top:6px">18 / 700　区块标题</div>
+    <div style="font-size:var(--fs-16);font-weight:600;margin-top:6px">16 / 600　页面标题</div>
+    <div style="font-size:var(--fs-14);margin-top:6px">14 / 400　正文（主要阅读层）</div>
+    <div class="text-3" style="margin-top:6px">12 / 400　辅助信息</div>
+    <div class="text-3" style="font-size:var(--fs-11);margin-top:6px">11 / 400　最小标签</div>
+  </div>
+
+  <div>
+    <div class="spec-label">按钮</div>
+    <div class="spec-row">
+      <button class="btn btn--primary">主要</button>
+      <button class="btn btn--secondary">次要</button>
+      <button class="btn btn--ghost">描边</button>
+      <button class="btn btn--text">文字</button>
+      <button class="btn btn--danger">危险</button>
+      <button class="btn btn--primary" disabled>禁用</button>
+    </div>
+    <div class="spec-row" style="margin-top:10px">
+      <button class="btn btn--primary btn--sm">小号</button>
+      <button class="btn btn--primary btn--lg">大号</button>
+      <button class="btn btn--primary btn--block">通栏按钮</button>
+    </div>
+  </div>
+
+  <div>
+    <div class="spec-label">标签 / 徽章 / 状态</div>
+    <div class="spec-row">
+      <span class="tag tag--outline">寻物</span>
+      <span class="tag tag--soft">拾物</span>
+      <span class="tag tag--solid">置顶</span>
+      <span class="tag tag--accent">急</span>
+      <span class="badge-count">3</span>
+      <span class="badge-dot"></span>
+    </div>
+    <div class="spec-row" style="margin-top:10px">
+      <span class="status">待确认</span>
+      <span class="status status--done">已完成</span>
+      <span class="status status--danger">仲裁中</span>
+    </div>
+  </div>
+
+  <div>
+    <div class="spec-label">卡片 · 商品型（二手 / 租赁）</div>
+    <a class="pcard">
+      <div class="media"></div>
+      <div class="pcard-body">
+        <div class="pcard-title clamp-2">高等数学 同济第七版 上下册</div>
+        <div class="pcard-desc ellipsis">9成新，无笔记，可单卖</div>
+        <div class="pcard-foot">
+          <span class="price"><span class="cur">¥</span>25</span>
+          <span class="meta">3号楼 · 10分钟前</span>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div>
+    <div class="spec-label">卡片 · 任务型（跑腿 / 拼单）</div>
+    <a class="pcard">
+      <div class="media"></div>
+      <div class="pcard-body">
+        <div class="pcard-title">代取快递：菜鸟驿站 → 7号楼</div>
+        <div class="pcard-desc">今天 18:00 前送到</div>
+        <div class="progress"><i style="width:60%"></i></div>
+        <div class="pcard-foot">
+          <span class="price"><span class="cur">¥</span>5</span>
+          <span class="meta">已拼 3/5</span>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div>
+    <div class="spec-label">卡片 · 人物型（技能互助）</div>
+    <a class="pcard">
+      <div class="avatar avatar--lg">林</div>
+      <div class="pcard-body">
+        <div class="pcard-title">PPT 美化 / 排版</div>
+        <div class="pcard-desc">可线上，单次 1 小时</div>
+        <div class="pcard-foot">
+          <span class="price price--sm">时薪 ¥40</span>
+          <span class="meta">已服务 12 次</span>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div>
+    <div class="spec-label">卡片 · 告示型（失物招领，无价格）</div>
+    <a class="pcard">
+      <div class="media media--sm"></div>
+      <div class="pcard-body">
+        <div class="spec-row" style="gap:6px">
+          <span class="tag tag--outline">拾物</span>
+          <span class="text-3">图书馆 3 楼</span>
+        </div>
+        <div class="pcard-title">黑色长柄雨伞</div>
+        <div class="pcard-foot">
+          <span class="price--none">无私聊即无交易</span>
+          <span class="meta">2 小时前</span>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div>
+    <div class="spec-label">表单</div>
+    <div class="field">
+      <div class="field-label">标题 <span class="req">*</span></div>
+      <input class="field-control" placeholder="一句话说清楚">
+      <div class="field-hint">最多 60 字</div>
+    </div>
+    <div class="field field--invalid">
+      <div class="field-label">学号 <span class="req">*</span></div>
+      <input class="field-control" value="2023">
+      <div class="field-error">学号格式不正确</div>
+    </div>
+    <div class="field">
+      <div class="field-label">图片</div>
+      <div class="uploader">
+        <div class="uploader-slot uploader-slot--filled"><span class="iconbtn"><svg class="ic ic--sm"><use href="#i-image"/></svg></span></div>
+        <div class="uploader-slot"><svg class="ic ic--sm"><use href="#i-plus"/></svg></div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">可议价</div>
+      <div class="switch switch--on"></div>
+    </div>
+  </div>
+
+  <div>
+    <div class="spec-label">底部导航（5 项 + 凸起）</div>
+    <div class="spec-tabdemo">
+      <nav class="tabbar">
+        <a class="tabitem tabitem--on"><span class="tab-icwrap"><svg class="ic"><use href="#i-home"/></svg></span><span class="tab-label">首页</span></a>
+        <a class="tabitem"><span class="tab-icwrap"><svg class="ic"><use href="#i-grid"/></svg></span><span class="tab-label">分类</span></a>
+        <a class="tabitem tabitem--fab"><span class="fab"><svg class="ic"><use href="#i-plus"/></svg></span><span class="tab-label">发布</span></a>
+        <a class="tabitem"><span class="tab-icwrap"><svg class="ic"><use href="#i-chat"/></svg><i class="badge-dot"></i></span><span class="tab-label">消息</span></a>
+        <a class="tabitem"><span class="tab-icwrap"><svg class="ic"><use href="#i-user"/></svg></span><span class="tab-label">我的</span></a>
+      </nav>
+    </div>
+  </div>
+
+  <div>
+    <div class="spec-label">反馈 · 提示 / 通知</div>
+    <div class="notice">平台仅提供信息对接，不参与资金流转。</div>
+    <div class="notice notice--warn" style="margin-top:8px">禁止发布：代写、代考、售卖外卖、网贷、刷单。</div>
+    <div class="spec-row" style="margin-top:10px">
+      <span class="status">Toast 示例</span>
+      <button class="btn btn--sm btn--ghost" data-toast="已保存">触发 Toast</button>
+    </div>
+  </div>
+
+  <div>
+    <div class="spec-label">空状态 / 骨架屏</div>
+    <div class="empty">
+      <div class="empty-ico"><svg class="ic ic--lg"><use href="#i-inbox"/></svg></div>
+      <div class="empty-title">还没有内容</div>
+      <div class="empty-desc">换个关键词，或者去发布一条</div>
+      <button class="btn btn--primary btn--sm">去发布</button>
+    </div>
+    <div class="skeleton-card" style="margin-top:10px">
+      <div class="skeleton skeleton-box"></div>
+      <div class="grow">
+        <div class="skeleton skeleton-line" style="width:70%"></div>
+        <div class="skeleton skeleton-line" style="width:45%"></div>
+        <div class="skeleton skeleton-line" style="width:30%"></div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="spec-label">订单时间线</div>
+    <div class="timeline">
+      <div class="tl-item tl-item--done"><span class="tl-dot"></span><div class="tl-body"><div class="tl-name">买家下单</div><div class="tl-time">10-17 14:20</div></div></div>
+      <div class="tl-item tl-item--current"><span class="tl-dot"></span><div class="tl-body"><div class="tl-name">卖家确认（约定面交）</div><div class="tl-time">进行中</div></div></div>
+      <div class="tl-item"><span class="tl-dot"></span><div class="tl-body"><div class="tl-name">卖家标记已交付</div><div class="tl-time">待完成</div></div></div>
+      <div class="tl-item"><span class="tl-dot"></span><div class="tl-body"><div class="tl-name">买家确认完成</div><div class="tl-time">待完成</div></div></div>
+    </div>
+  </div>
+</template>
+
+<!-- ============ 图标 sprite（内联，file:// 下外链 <use> 会被拦） ============ -->
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9.5 20v-6h5v6"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 12a7.5 7.5 0 0 1-10.9 6.7L4 20l1.3-4.1A7.5 7.5 0 1 1 20 12Z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="m4.5 17 5-4.5 4 3.5 3-2.5 3 3"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M3.5 13.5 6 5h12l2.5 8.5"/><path d="M3.5 13.5V19h17v-5.5"/><path d="M8 13.5h8"/></symbol>
+</svg>
+
+<script>
+(function () {
+  /* 1. 把模板注入两个面板 */
+  var tpl = document.getElementById('tpl').content;
+  document.querySelectorAll('[data-slot]').forEach(function (slot) {
+    slot.appendChild(tpl.cloneNode(true));
+  });
+
+  /* 2. 色块用 token 上色（避免在 HTML 里写颜色字面量） */
+  document.querySelectorAll('[data-bg]').forEach(function (el) {
+    el.style.background = 'var(' + el.dataset.bg + ')';
+  });
+
+})();
+</script>
+</body>
+</html>

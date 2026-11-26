@@ -1,0 +1,60 @@
+# ============================================================
+# 校集 · 仓库忽略规则
+#
+# 原则：只提交「源代码 + 配置模板 + 文档 + 少量资源」。
+# 构建产物、依赖、日志、上传的用户文件、含明文的本地配置一律不进仓库。
+# ============================================================
+
+# ---------- 构建产物 ----------
+target/
+build/
+dist/
+dist-*/
+*.class
+*.war
+*.jar
+!xiaojii-server/mvnw
+
+# ---------- 依赖 ----------
+node_modules/
+.pnpm-store/
+.npm/
+
+# ---------- 日志与 JVM 崩溃转储 ----------
+*.log
+logs/
+hs_err_pid*
+replay_pid*
+
+# ---------- 本地敏感配置（含明文密码） ----------
+xiaojii-server/src/main/resources/application-local.yml
+*.env
+!xiaojii-server/deploy/env.example
+project.private.config.json
+
+# ---------- 运行时上传的用户文件 ----------
+xiaojii-server/uploads/
+
+# ---------- IDE / 系统 ----------
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- 本机工具链本地状态 ----------
+.workbuddy/
+
+# ---------- 历史备份与教学沙箱（仅本地保留） ----------
+_backup/
+_teaching/
+
+# ---------- 第三方克隆项目（不属于本项目源码） ----------
+mall/
+WeCollege/
+
+# ---------- 调试截图（本地临时产物） ----------
+preview-xj*.png
+preview-xj*.json
+tools/_*.png

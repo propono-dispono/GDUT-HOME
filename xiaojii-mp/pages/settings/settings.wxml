@@ -1,0 +1,54 @@
+<!-- 设置 —— 页面结构 -->
+<view class="app">
+
+  <view class="appbar" style="height:{{appbarH}}px;padding-top:{{safeTop}}px;padding-right:{{capsuleRight}}px">
+    <view class="iconbtn" hover-class="iconbtn-hv" bindtap="onBack">
+      <view class="ic ic-i-back"></view>
+    </view>
+    <text class="appbar-title">设置</text>
+  </view>
+
+  <scroll-view class="app-main" scroll-y enable-flex>
+
+    <view class="section-title mt-3">个人资料</view>
+    <view class="field">
+      <view class="field-label">昵称</view>
+      <input
+        class="field-control"
+        value="{{nickname}}"
+        maxlength="32"
+        placeholder="给自己起个名字"
+        placeholder-class="ph"
+        bindinput="onNick"
+      />
+      <view class="field-hint">昵称会显示在你发布的内容和私信里</view>
+    </view>
+
+    <view style="padding:0 var(--gutter)" class="mt-3">
+      <view class="btn btn--primary btn--block" hover-class="btn-hv" bindtap="onSave">
+        {{saving ? '保存中…' : '保存'}}
+      </view>
+    </view>
+
+    <view class="section-title mt-4">通用</view>
+    <view class="mt-1">
+      <view class="rowlink" hover-class="rowlink-hv" bindtap="onClear">
+        <view class="rowlink-ico"><view class="ic ic-i-trash"></view></view>
+        <text class="rowlink-label">清除缓存</text>
+        <view class="rowlink-chev"><view class="ic ic--sm ic-i-chev"></view></view>
+      </view>
+      <view class="rowlink" hover-class="rowlink-hv" bindtap="onAbout">
+        <view class="rowlink-ico"><view class="ic ic-i-shield"></view></view>
+        <text class="rowlink-label">关于校集</text>
+        <text class="rowlink-value">v{{version}}</text>
+        <view class="rowlink-chev"><view class="ic ic--sm ic-i-chev"></view></view>
+      </view>
+    </view>
+
+    <view style="padding:0 var(--gutter);margin-bottom:var(--s6)" class="mt-5">
+      <view class="btn btn--danger btn--block" hover-class="btn-hv" bindtap="onLogout">退出登录</view>
+    </view>
+
+  </scroll-view>
+
+</view>

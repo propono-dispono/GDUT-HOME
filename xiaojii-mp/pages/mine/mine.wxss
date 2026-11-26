@@ -1,0 +1,22 @@
+.mine-avatar {
+  display: block;
+  object-fit: cover;
+}
+
+.mine-extra {
+  padding: 0 var(--gutter) var(--s4);
+}
+
+.mine-bio {
+  margin-top: 8rpx;
+  font-size: var(--fs-13);
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+
+.mine-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+  margin-top: 12rpx;
+}

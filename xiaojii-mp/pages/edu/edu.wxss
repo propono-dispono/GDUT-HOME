@@ -1,0 +1,531 @@
+/* ================= 教务中心 =================
+ * 课表按设计图还原：浅绿周条 + 12 节次栏 + 低饱和课程块
+ * 其余沿用 app.wxss 的黑白变量，不额外引色板
+ */
+
+/* ---------- 课表容器 ---------- */
+.tt-wrap {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+}
+
+.tt-meta {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: var(--s2) var(--gutter);
+  background: var(--surface);
+}
+
+.tt-meta-term {
+  font-size: var(--fs-12);
+  color: var(--ink-2);
+}
+
+.tt-meta-week {
+  font-size: var(--fs-12);
+  color: var(--ink-3);
+}
+
+/* ---------- 周选择 + 星期头 ---------- */
+.tt-head {
+  display: flex;
+  align-items: stretch;
+  background: linear-gradient(180deg, #C6E0B8 0%, #DCEFD0 100%);
+  border-top: 2rpx solid rgba(47, 93, 58, .06);
+  border-bottom: 2rpx solid rgba(47, 93, 58, .08);
+}
+
+.tt-weeknav {
+  flex: 0 0 auto;
+  width: 128rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4rpx;
+  padding: var(--s2) 0;
+}
+
+.tt-arrow {
+  width: 34rpx;
+  height: 44rpx;
+  line-height: 40rpx;
+  text-align: center;
+  font-size: 34rpx;
+  color: #4C7B58;
+}
+
+.tt-week {
+  padding: 2rpx 8rpx;
+  border-radius: var(--r-xs);
+  background: rgba(255, 255, 255, .72);
+  font-size: var(--fs-12);
+  font-weight: var(--fw-semi);
+  color: #2F5D3A;
+  white-space: nowrap;
+}
+
+.tt-days {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+}
+
+.tt-day {
+  flex: 1;
+  min-width: 0;
+  padding: 10rpx 0 8rpx;
+  text-align: center;
+}
+
+.tt-wd {
+  display: block;
+  font-size: 20rpx;
+  color: #5C7A63;
+  line-height: 1.2;
+}
+
+.tt-mini{
+  display:block; font-size:20rpx; color:#5C7A63; margin-top:2rpx;
+}
+.tt-weekbox{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  min-width:96rpx;
+}
+.tt-month{
+  font-size:20rpx; color:#4C6B54; line-height:1.1;
+}
+.tt-date {
+  width: 52rpx;
+  height: 52rpx;
+  line-height: 52rpx;
+  margin: 6rpx auto 0;
+  border-radius: var(--r-full);
+  font-size: 28rpx;
+  font-weight: var(--fw-med);
+  color: #26492F;
+  font-variant-numeric: tabular-nums;
+}
+
+.tt-date--on {
+  background: #1F4D2E;
+  color: #FFFFFF;
+  font-weight: var(--fw-semi);
+}
+
+.tt-day.is-today .tt-wd {
+  color: #1F4D2E;
+  font-weight: var(--fw-semi);
+}
+
+/* ---------- 网格 ---------- */
+.tt-swiper {
+  flex: 1;
+  min-height: 0;
+  height: 0;
+}
+.tt-swiper swiper-item {
+  height: 100%;
+  overflow: hidden;
+}
+
+.tt-body {
+  height: 100%;
+  background: var(--surface);
+}
+
+.tt-grid {
+  position: relative;
+  display: flex;
+}
+
+.tt-gutter {
+  flex: 0 0 auto;
+  background: linear-gradient(180deg, #CBE4BC 0%, #E1F0D5 100%);
+}
+
+.tt-gutter-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  font-weight: var(--fw-med);
+  color: #2F5D3A;
+  font-variant-numeric: tabular-nums;
+}
+
+.tt-canvas {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.tt-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-bottom: 2rpx solid #F2F2F4;
+  box-sizing: border-box;
+}
+
+.tt-block {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10rpx 6rpx;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.tt-block-hv {
+  opacity: .86;
+}
+
+.tt-block-name {
+  width: 100%;
+  font-size: 23rpx;
+  line-height: 1.25;
+  text-align: center;
+  word-break: break-all;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+
+.tt-block.is-tight .tt-block-name {
+  -webkit-line-clamp: 2;
+}
+
+.tt-block-room {
+  width: 100%;
+  margin-top: 4rpx;
+  font-size: 19rpx;
+  line-height: 1.2;
+  text-align: center;
+  opacity: .92;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tt-empty {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 240rpx;
+  text-align: center;
+}
+
+.tt-empty-text {
+  font-size: var(--fs-12);
+  color: var(--ink-4);
+}
+
+/* ---------- 成绩 ---------- */
+.sc-summary {
+  padding: var(--s5) var(--gutter) var(--s4);
+  background: var(--surface);
+}
+
+.sc-gpa {
+  display: flex;
+  align-items: baseline;
+  gap: 12rpx;
+}
+
+.sc-gpa-num {
+  font-size: 76rpx;
+  line-height: 1;
+  font-weight: var(--fw-bold);
+  letter-spacing: -.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.sc-gpa-label {
+  font-size: var(--fs-12);
+  color: var(--ink-3);
+}
+
+.sc-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: var(--s4);
+  padding-top: var(--s3);
+  border-top: 2rpx solid var(--line);
+}
+
+.sc-metric {
+  text-align: center;
+}
+
+.sc-metric-n {
+  font-size: var(--fs-16);
+  font-weight: var(--fw-semi);
+  font-variant-numeric: tabular-nums;
+}
+
+.sc-metric-l {
+  display: block;
+  margin-top: 4rpx;
+  font-size: 20rpx;
+  color: var(--ink-3);
+}
+
+.sc-fixture {
+  margin-top: 12rpx;
+  font-size: 20rpx;
+  color: var(--ink-4);
+}
+
+.sc-seg {
+  display: flex;
+  margin: var(--s3) var(--gutter);
+}
+
+.sc-seg button {
+  flex: 1;
+  padding: 0;
+}
+
+.sc-term {
+  background: var(--surface);
+}
+
+.sc-term + .sc-term {
+  border-top: 2rpx solid var(--line);
+}
+
+.sc-term-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s3) var(--gutter);
+}
+
+.sc-term-name {
+  font-size: var(--fs-14);
+  color: var(--ink);
+}
+
+.sc-term-gpa {
+  font-size: var(--fs-18);
+  font-weight: var(--fw-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.sc-chev {
+  color: var(--ink-4);
+  transition: transform var(--dur-1) var(--ease);
+}
+
+.sc-chev.is-open {
+  transform: rotate(90deg);
+}
+
+.sc-courses {
+  background: var(--surface-2);
+}
+
+.sc-course {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: 20rpx var(--gutter);
+}
+
+.sc-course + .sc-course {
+  border-top: 2rpx solid var(--line);
+}
+
+.sc-course-name {
+  font-size: var(--fs-13);
+  color: var(--ink);
+}
+
+.sc-course-score {
+  min-width: 72rpx;
+  text-align: right;
+  font-size: var(--fs-13);
+  font-weight: var(--fw-semi);
+  font-variant-numeric: tabular-nums;
+}
+
+.sc-course-score.is-fail {
+  color: var(--accent-text);
+}
+
+.sc-course-point {
+  min-width: 56rpx;
+  text-align: right;
+  font-size: var(--fs-11);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.sc-group {
+  background: var(--surface);
+}
+
+.sc-group-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s3) var(--gutter);
+}
+
+.sc-group-row + .sc-group-row {
+  border-top: 2rpx solid var(--line);
+}
+
+.sc-foot {
+  padding: var(--s4) var(--gutter) var(--s8);
+  font-size: 20rpx;
+  line-height: 1.7;
+  color: var(--ink-4);
+}
+
+/* ---------- 考试 ---------- */
+.ex-filter {
+  display: flex;
+  gap: 12rpx;
+  padding: var(--s3) var(--gutter) 0;
+}
+.ex-filter-item {
+  flex: 1;
+  text-align: center;
+  padding: 14rpx 0;
+  border-radius: var(--r-full);
+  font-size: var(--fs-12);
+  color: var(--ink-3);
+  background: var(--surface-2);
+  white-space: nowrap;
+}
+.ex-filter-item.is-on {
+  background: var(--ink);
+  color: #FFFFFF;
+  font-weight: var(--fw-med);
+}
+
+.ex-list {
+  padding: var(--s2) var(--gutter) var(--s8);
+}
+
+.ex-item {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s3);
+  overflow: hidden;
+  margin-bottom: var(--s2);
+  background: var(--surface);
+  border-radius: var(--r-md);
+}
+
+.ex-date {
+  flex: 0 0 auto;
+  width: 92rpx;
+  padding: 10rpx 0;
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  text-align: center;
+}
+
+.ex-date-month {
+  display: block;
+  font-size: 20rpx;
+  color: var(--ink-3);
+  line-height: 1.2;
+}
+
+.ex-date-day {
+  display: block;
+  font-size: var(--fs-18);
+  font-weight: var(--fw-bold);
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+}
+
+.ex-date.is-passed {
+  opacity: .45;
+}
+
+.ex-name {
+  font-size: var(--fs-13);
+  font-weight: var(--fw-med);
+  color: var(--ink);
+  /* 超长课程名省略，不顶出卡片 */
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+
+.ex-line {
+  margin-top: 4rpx;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+
+/* 右侧「已考 / N 天后」标签不允许被压缩：被压缩会把文字挤出去 */
+.ex-item .tag { flex: 0 0 auto; min-width: 92rpx; }
+
+/* ---------- 未登录 ---------- */
+.edu-gate {
+  padding-top: var(--s8);
+  padding-bottom: var(--s8);
+}
+
+.edu-gate .empty-desc {
+  max-width: 560rpx;
+  margin: var(--s2) auto 0;
+  line-height: 1.7;
+  color: var(--ink-3);
+}
+
+/* ---------- 课程详情弹层 ---------- */
+.edu-scrim {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: var(--z-sheet);
+  display: flex;
+  align-items: flex-end;
+  background: var(--scrim);
+}
+
+.edu-sheet {
+  width: 100%;
+  padding: var(--s2) var(--gutter) var(--s8);
+  background: var(--surface);
+  border-radius: 32rpx 32rpx 0 0;
+}
+
+.edu-sheet-title {
+  margin: var(--s2) 0 var(--s3);
+  font-size: var(--fs-18);
+  font-weight: var(--fw-semi);
+  line-height: 1.4;
+}
+
+.edu-sheet-row {
+  display: flex;
+  gap: var(--s3);
+  padding: 12rpx 0;
+  font-size: var(--fs-13);
+}
+
+.edu-sheet-k {
+  flex: 0 0 88rpx;
+  color: var(--ink-4);
+}
+
+.edu-sheet-v {
+  flex: 1;
+  min-width: 0;
+  color: var(--ink-2);
+}

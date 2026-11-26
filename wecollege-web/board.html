@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>表白墙 · 校园生活圈</title>
+<link rel="stylesheet" href="assets/wx-base.css">
+<link rel="stylesheet" href="assets/page-board.css">
+<link rel="stylesheet" href="assets/shell.css">
+</head>
+<body>
+<div class="app">
+  <header class="navbar">
+    <a class="nb-back" href="index.html">‹</a>
+    <span class="nb-title">表白墙</span>
+    <div class="capsule"><i>•••</i><span class="sep"></span><i>◎</i></div>
+  </header>
+
+  <div class="search-bar">
+    <div class="sb-input">
+      <span class="icon-search"></span>
+      <input placeholder="搜索">
+    </div>
+    <a class="sb-mine" href="my.html"><span class="icon-moreandroid"></span>我的</a>
+  </div>
+
+  <div class="filter-tabs">
+    <div class="ft-item on">全部</div>
+    <div class="ft-item">今日</div>
+    <div class="ft-item">昨日</div>
+    <div class="ft-item">最早</div>
+    <div class="ft-item">点赞数</div>
+    <div class="ft-item">评论数</div>
+    <div class="ft-item">收藏数</div>
+  </div>
+
+  <div class="list" id="list"></div>
+
+  <div class="post">
+    <div class="inner shadow-project bg-pink" onclick="location.href='add.html?type=board'">
+      <span class="icon-like margin-right-xs"></span>写表白
+    </div>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script>
+  renderBoard($('#list'));
+  bindTabs();
+  mountBackTop();
+</script>
+</body>
+</html>

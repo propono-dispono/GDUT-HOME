@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>我的 · 校园生活圈</title>
+<link rel="stylesheet" href="assets/wx-base.css">
+<link rel="stylesheet" href="assets/page-my.css">
+<link rel="stylesheet" href="assets/shell.css">
+</head>
+<body>
+<div class="app">
+  <header class="navbar">
+    <a class="nb-back" href="index.html">‹</a>
+    <span class="nb-title">我的</span>
+  </header>
+
+  <div class="main">
+    <!-- 顶部用户信息（原版 my_index.wxml） -->
+    <div class="upside upside-shadow">
+      <img class="upImg loading" src="../WeCollege/miniprogram/projects/campus/images/my.jpg" alt="">
+      <div class="user-bar">
+        <div class="detail">
+          <div class="name text-cut">林同学</div>
+          <div class="desc">
+            <div class="tag small radius bg-orange light">已注册，待审核</div>
+          </div>
+        </div>
+        <div class="avatar">
+          <img src="../WeCollege/miniprogram/projects/campus/images/tabbar/my_cur.png" alt="" class="fit">
+        </div>
+      </div>
+    </div>
+
+    <div class="down padding-project">
+      <!-- 我的记录 -->
+      <div class="record card-project shadow-project">
+        <div class="title"><span class="icon-circlefill margin-right-xs text-blue"></span>我的记录</div>
+        <div class="list">
+          <div class="item">
+            <div class="line1"><span class="icon-attentionfill text-olive"></span></div>
+            <div class="line2">浏览足迹</div>
+          </div>
+          <div class="item">
+            <div class="line1"><span class="icon-forwardfill text-yellow"></span></div>
+            <div class="line2">我的发布</div>
+          </div>
+          <div class="item">
+            <div class="line1"><span class="icon-appreciatefill text-blue"></span></div>
+            <div class="line2">我的点赞</div>
+          </div>
+          <div class="item">
+            <div class="line1"><span class="icon-favorfill text-red"></span></div>
+            <div class="line2">我的收藏</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 菜单 -->
+      <div class="comm-list menu card-project shadow-project">
+        <a class="item arrow" href="about.html">
+          <div class="content">
+            <span class="icon-servicefill text-blue"></span>
+            <span class="text-black">关于我们</span>
+          </div>
+        </a>
+        <a class="item arrow" href="about.html">
+          <div class="content">
+            <span class="icon-dianhua text-pink"></span>
+            <span class="text-black">联系我们</span>
+          </div>
+        </a>
+        <a class="item arrow" href="about.html">
+          <div class="content">
+            <span class="icon-settingsfill text-cyan"></span>
+            <span class="text-black">设置</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:calc(0.133333cqw * 100)"></div>
+  <nav id="tabbar"></nav>
+</div>
+
+<script src="assets/data.js"></script>
+<script>mountTab('my');</script>
+</body>
+</html>

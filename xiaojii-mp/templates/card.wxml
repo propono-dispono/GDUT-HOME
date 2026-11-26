@@ -1,0 +1,86 @@
+<!--
+  信息流卡片：一张模板覆盖原型的 4 种形态
+    item   二手 / 租赁      大图 + 标题 + 描述 + 价格
+    task   跑腿 / 拼单      大图 + 进度条 + 价格
+    person 技能互助         头像 + 标题
+    notice 失物招领         小图 + 类型标签
+  依赖 item._form / item._icon / item._pct，由 utils/biz.js 的 decorate() 生成
+-->
+<template name="card">
+  <view class="pcard" hover-class="pcard-hv" hover-stay-time="60" data-id="{{item.id}}" bindtap="onCardTap">
+
+    <!-- person：技能互助 -->
+    <block wx:if="{{item._form === 'person'}}">
+      <view class="avatar avatar--lg">{{item.user}}</view>
+      <view class="pcard-body">
+        <view class="pcard-title ellipsis">{{item.title}}</view>
+        <view class="pcard-desc ellipsis">{{item.desc}}</view>
+        <view class="pcard-foot">
+          <text wx:if="{{item.price}}" class="price"><text class="cur">¥</text>{{item.price}}<text wx:if="{{item.priceUnit}}" class="meta"> {{item.priceUnit}}</text></text>
+          <text wx:else class="price--none">线下沟通</text>
+          <text class="meta">{{item.meta}}</text>
+        </view>
+      </view>
+    </block>
+
+    <!-- notice：失物招领 -->
+    <block wx:elif="{{item._form === 'notice'}}">
+      <view wx:if="{{item.cover}}" class="media media--sm">
+        <image src="{{item.cover}}" mode="aspectFill" lazy-load></image>
+      </view>
+      <view wx:else class="media media--sm media-empty">
+        <view class="ic ic-{{item._icon}}"></view>
+      </view>
+      <view class="pcard-body">
+        <view class="row gap-1">
+          <text class="tag tag--outline">{{item.tag || '失物'}}</text>
+          <text class="text-3">{{item.meta}}</text>
+        </view>
+        <view class="pcard-title ellipsis">{{item.title}}</view>
+        <view class="pcard-desc ellipsis">{{item.desc}}</view>
+      </view>
+    </block>
+
+    <!-- task：跑腿代办 / 校园拼单 -->
+    <block wx:elif="{{item._form === 'task'}}">
+      <view wx:if="{{item.cover}}" class="media">
+        <image src="{{item.cover}}" mode="aspectFill" lazy-load></image>
+      </view>
+      <view wx:else class="media media-empty">
+        <view class="ic ic-{{item._icon}}"></view>
+      </view>
+      <view class="pcard-body">
+        <view class="pcard-title clamp-2">{{item.title}}</view>
+        <view class="pcard-desc ellipsis">{{item.desc}}</view>
+        <view class="progress" wx:if="{{item._pct > 0}}">
+          <view class="progress-fill" style="width:{{item._pct}}%"></view>
+        </view>
+        <view class="pcard-foot">
+          <text wx:if="{{item.price}}" class="price"><text class="cur">¥</text>{{item.price}}<text wx:if="{{item.priceUnit}}" class="meta"> {{item.priceUnit}}</text></text>
+          <text wx:else class="price--none">线下沟通</text>
+          <text class="meta">{{item.meta}}</text>
+        </view>
+      </view>
+    </block>
+
+    <!-- item：二手闲置 / 物品租赁 -->
+    <block wx:else>
+      <view wx:if="{{item.cover}}" class="media">
+        <image src="{{item.cover}}" mode="aspectFill" lazy-load></image>
+      </view>
+      <view wx:else class="media media-empty">
+        <view class="ic ic-{{item._icon}}"></view>
+      </view>
+      <view class="pcard-body">
+        <view class="pcard-title clamp-2">{{item.title}}</view>
+        <view class="pcard-desc ellipsis">{{item.desc}}</view>
+        <view class="pcard-foot">
+          <text wx:if="{{item.price}}" class="price"><text class="cur">¥</text>{{item.price}}<text wx:if="{{item.priceUnit}}" class="meta"> {{item.priceUnit}}</text></text>
+          <text wx:else class="price--none">线下沟通</text>
+          <text class="meta">{{item.meta}}</text>
+        </view>
+      </view>
+    </block>
+
+  </view>
+</template>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>校集 · 原型导航</title>
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<style>
+  body { padding: 40px 24px; }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  h1 { font-size: var(--fs-24); letter-spacing: -.02em; }
+  .sub { margin-top: var(--s2); color: var(--ink-3); font-size: var(--fs-13); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--s3); margin-top: var(--s6); }
+  .card {
+    display: block; padding: var(--s4);
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    transition: transform var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease);
+  }
+  .card:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+  .card b { display: block; font-size: var(--fs-14); font-weight: var(--fw-semi); }
+  .card span { display: block; margin-top: 3px; font-size: var(--fs-12); color: var(--ink-3); }
+  .hint { margin-top: var(--s6); padding: var(--s3) var(--s4); border-radius: var(--r-md); background: var(--surface-2); border: 1px solid var(--line); font-size: var(--fs-12); color: var(--ink-2); line-height: var(--lh-loose); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>校集 · 原型导航</h1>
+  <div class="sub">广东工业大学（GDUT）校园互助平台 ｜ 白色单主题 ｜ 5 Tab ｜ 6 条业务线</div>
+
+  <div class="grid">
+    <a class="card" href="preview.html"><b>手机预览台 →</b><span>400×851 固定视口，一页看完所有页面</span></a>
+    <a class="card" href="pages/home.html"><b>首页</b><span>6 业务线入口 + 分类切换 + 信息流</span></a>
+    <a class="card" href="pages/category.html"><b>分类</b><span>业务线大条目 + 热门二级</span></a>
+    <a class="card" href="pages/messages.html"><b>消息</b><span>系统入口 + 私信会话</span></a>
+    <a class="card" href="pages/mine.html"><b>我的</b><span>个人资料 + 订单入口</span></a>
+    <a class="card" href="pages/list.html?biz=SECONDHAND"><b>列表</b><span>按业务线筛选 + 价格排序</span></a>
+    <a class="card" href="pages/detail.html?type=SECONDHAND&id=1"><b>详情</b><span>6 类统一详情，字段随类型变</span></a>
+    <a class="card" href="pages/publish.html"><b>发布</b><span>6 类动态表单</span></a>
+    <a class="card" href="pages/orders.html"><b>我的订单</b><span>买卖双视角 + 状态筛选</span></a>
+    <a class="card" href="pages/order-detail.html?id=9001"><b>订单详情</b><span>状态时间线 + 角色化操作</span></a>
+    <a class="card" href="pages/chat.html?id=101"><b>私信</b><span>气泡 + 快捷短语</span></a>
+    <a class="card" href="pages/verify.html"><b>校园认证</b><span>学号 + 证件照 + 邀请码</span></a>
+    <a class="card" href="pages/components.html"><b>组件规格</b><span>设计系统验收（开发用）</span></a>
+  </div>
+
+  <div class="hint">
+    数据在 <b>assets/js/data.js</b>（演示数据），渲染在 <b>assets/js/ui.js</b>，样式令牌在 <b>assets/css/tokens.css</b>。<br>
+    图片来自 Unsplash，来源记录见 <b>assets/img/CREDITS.md</b>。接后端时替换 data.js 即可。
+  </div>
+</div>
+</body>
+</html>

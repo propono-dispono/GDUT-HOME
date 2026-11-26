@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>校园认证 · 校集</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="appbar">
+    <a class="iconbtn" href="javascript:history.back()" aria-label="返回">
+      <svg class="ic" aria-hidden="true" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+    </a>
+    <span class="appbar-title">校园认证</span>
+  </header>
+
+  <main class="app-main">
+
+    <section style="padding:var(--s6) var(--gutter);text-align:center;background:var(--surface)">
+      <div style="width:52px;height:52px;margin:0 auto;display:grid;place-items:center;border-radius:50%;background:var(--surface-2);border:1px solid var(--line)">
+        <svg class="ic" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3.5 19 6v6c0 4.4-3 7.4-7 8.5-4-1.1-7-4.1-7-8.5V6l7-2.5Z"/><path d="m9 12 2 2 4-4"/></svg>
+      </div>
+      <div style="margin-top:var(--s3);font-size:var(--fs-16);font-weight:600">已认证</div>
+      <div style="margin-top:4px;font-size:var(--fs-12);color:var(--ink-3)">广东工业大学 · 学号 2023****17 · 审核于 10-05</div>
+    </section>
+
+    <div style="padding:var(--s4) var(--gutter)">
+      <div class="notice">面向<b>广东工业大学（GDUT）</b>在校生。平台无法对接学校教务系统，采用「校园卡照片 + 人工审核」方式。审核通过前可浏览，但不能发布与私信。</div>
+    </div>
+
+    <div class="section-title">基本信息</div>
+    <div class="field">
+      <div class="field-label">学号 <span class="req">*</span></div>
+      <input class="field-control" placeholder="请输入学号（全局唯一，防一人多号）">
+      <div class="field-hint">同一学号只能绑定一个账号</div>
+    </div>
+    <div class="field">
+      <div class="field-label">真实姓名 <span class="req">*</span></div>
+      <input class="field-control" placeholder="需与校园卡一致">
+    </div>
+
+    <div class="field">
+      <div class="field-label">校园卡 / 学生证照片 <span class="req">*</span></div>
+      <div class="uploader">
+        <div class="uploader-slot">🪪</div>
+        <div class="uploader-slot">
+          <svg class="ic ic--sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        </div>
+      </div>
+      <div class="field-hint">请遮挡敏感信息，仅需露出姓名、学号、院系</div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">邀请码（可选）</div>
+      <input class="field-control" placeholder="由已认证同学提供">
+      <div class="field-hint">仅用于控制注册节奏，不产生任何返利</div>
+    </div>
+
+    <div class="section-title mt-3">审核规则</div>
+    <div class="kvlist">
+      <div class="kv"><span class="kv-k">核验方式</span><span class="kv-v">人工审核，1 个工作日内</span></div>
+      <div class="kv"><span class="kv-k">信息用途</span><span class="kv-v">仅用于身份核验，不对外展示</span></div>
+      <div class="kv"><span class="kv-k">虚假信息</span><span class="kv-v">驳回并扣除信用分</span></div>
+    </div>
+
+    <div style="height:var(--s4)"></div>
+  </main>
+
+  <div class="actionbar">
+    <button class="btn btn--primary btn--block" id="submit">提交认证</button>
+  </div>
+</div>
+
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/ui.js"></script>
+<script>
+(function () {
+  UI.shell();
+  document.getElementById('submit').addEventListener('click', function () {
+    UI.toast('已提交，状态变为「待审核」（演示）');
+  });
+})();
+</script>
+</body>
+</html>

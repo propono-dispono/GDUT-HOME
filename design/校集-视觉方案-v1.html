@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>校集 · 视觉设计方案 v1</title>
+<style>
+  :root{
+    --ink:#1f2329; --ink2:#4e5969; --ink3:#86909c; --line:#e8eaee;
+    --page:#f6f7f9; --card:#fff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--page);color:var(--ink);line-height:1.7;font-size:14px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+  .wrap{max-width:1120px;margin:0 auto;padding:32px 22px 80px}
+  h1{font-size:26px;margin:0 0 6px}
+  .sub{color:var(--ink3);font-size:13px;margin-bottom:20px}
+  .notice{background:#fff8e6;border:1px solid #f2d7a6;border-radius:10px;padding:12px 16px;font-size:13px;color:#8a5a10;margin-bottom:26px}
+  h2{font-size:19px;margin:40px 0 14px;padding-left:11px;border-left:4px solid #2f6bff}
+  h3{font-size:15px;margin:0 0 4px}
+
+  /* ---------- 方向板 ---------- */
+  .board{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:22px}
+  .board-hd{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+  .tag{font-size:11.5px;padding:2px 9px;border-radius:999px;background:#f2f3f5;color:var(--ink2)}
+  .tag.rec{background:#e8f7ee;color:#0b7a45}
+  .board .pos{color:var(--ink3);font-size:13px;margin-bottom:18px}
+
+  .cols{display:grid;grid-template-columns:1.15fr 1fr;gap:22px}
+  @media(max-width:820px){.cols{grid-template-columns:1fr}}
+
+  .label{font-size:12px;color:var(--ink3);margin:0 0 8px;letter-spacing:.4px}
+
+  /* 色板 */
+  .palette{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+  .sw{flex:1;min-width:74px;border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,.06)}
+  .sw .c{height:54px}
+  .sw .t{font-size:10.5px;padding:4px 6px;background:#fff;color:var(--ink3);font-family:Consolas,Monaco,monospace}
+
+  /* 字号 */
+  .typescale div{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+  .typescale .n{font-size:10.5px;color:#b6bcc6;font-family:Consolas,monospace;width:58px}
+
+  /* 组件示例 */
+  .demo{background:var(--demo-bg,#f5f7fa);border-radius:14px;padding:16px;margin-top:14px}
+  .dcard{background:#fff;border-radius:var(--demo-radius,16px);padding:12px;display:flex;gap:10px;
+    box-shadow:var(--demo-shadow,0 1px 3px rgba(16,24,40,.06))}
+  .dthumb{width:78px;height:78px;border-radius:calc(var(--demo-radius,16px) - 6px);background:var(--demo-thumb,#e8eefc);flex:0 0 auto}
+  .dbody{flex:1;min-width:0}
+  .dtitle{font-size:14px;font-weight:600;line-height:1.4}
+  .ddesc{font-size:12px;color:var(--ink3);margin-top:2px}
+  .drow{display:flex;align-items:baseline;gap:6px;margin-top:8px}
+  .dprice{color:var(--demo-accent,#e0342b);font-weight:700;font-size:16px}
+  .dmeta{margin-left:auto;font-size:11px;color:var(--ink3)}
+  .dbtn{display:inline-flex;align-items:center;justify-content:center;height:34px;padding:0 16px;
+    border-radius:var(--demo-btn-radius,10px);background:var(--demo-brand);color:#fff;font-size:13px;font-weight:500;margin-top:10px}
+  .dbtn.ghost{background:#fff;color:var(--demo-brand);border:1px solid var(--demo-brand)}
+  .dchips{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+  .dchip{font-size:12px;padding:5px 12px;border-radius:999px;background:#fff;color:var(--ink2);border:1px solid var(--line)}
+  .dchip.on{background:var(--demo-brand);border-color:var(--demo-brand);color:#fff}
+
+  /* 手机壳 */
+  .phone{width:260px;border:8px solid #16181d;border-radius:30px;overflow:hidden;background:var(--demo-bg,#f5f7fa);
+    margin:0 auto;box-shadow:0 12px 30px rgba(16,24,40,.16)}
+  .phone .scr{height:430px;overflow:hidden;display:flex;flex-direction:column}
+  .pnav{height:38px;background:var(--demo-brand);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px}
+  .pbody{padding:10px;flex:1;overflow:hidden}
+  .ptab{height:46px;background:#fff;border-top:1px solid #eee;display:grid;grid-template-columns:repeat(4,1fr);
+    font-size:9.5px;color:#9aa0a6;align-items:center;text-align:center}
+  .ptab .on{color:var(--demo-brand)}
+
+  /* 优缺点 */
+  .pros{margin:14px 0 0;padding:0;list-style:none;font-size:13px}
+  .pros li{padding-left:16px;position:relative;margin:4px 0;color:var(--ink2)}
+  .pros li::before{content:"·";position:absolute;left:4px;color:var(--ink3);font-weight:700}
+  .pros li.good::before{content:"✓";color:#12a150;left:0}
+  .pros li.bad::before{content:"!";color:#e0342b;left:2px}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;margin:10px 0}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#f2f4f7;font-weight:600;color:var(--ink2)}
+  code{background:#f2f3f5;padding:1px 6px;border-radius:5px;font-size:12.5px;color:#2456a8;font-family:Consolas,monospace}
+
+  .final{background:#eef3ff;border:1px solid #cfdcff;border-radius:14px;padding:20px 22px}
+  .final h3{font-size:16px;margin-bottom:8px}
+  .foot{color:var(--ink3);font-size:12.5px;margin-top:34px;border-top:1px dashed var(--line);padding-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>校集 · 视觉设计方案 <span class="tag">v1 待确认</span></h1>
+  <div class="sub">基于《校集 PRD V1.0》一期功能 ｜ 三个方向 · 真实色块与组件示例 ｜ 选定后再进入页面实现</div>
+
+  <div class="notice">
+    <b>关于参考链接：</b>你给的 <code>js.design/workspace</code> 是<b>私有工作区</b>，我无法读取里面的画布内容，
+    所以本方案基于「同类校园/二手/跑腿小程序」的通用范式 + 你的 PRD 推导，未直接引用你工作区里的稿子。
+  </div>
+
+  <!-- ================= 方向 A ================= -->
+  <h2>方向 A · 清新校园（蓝 × 薄荷绿）</h2>
+  <div class="board" style="--demo-brand:#2f6bff;--demo-accent:#e0342b;--demo-bg:#f5f7fa;--demo-radius:16px;
+       --demo-shadow:0 2px 8px rgba(16,24,40,.06);--demo-thumb:#e8eefc">
+    <div class="board-hd">
+      <h3>清爽、可信、年轻</h3>
+      <span class="tag rec">推荐</span>
+    </div>
+    <div class="pos">用低饱和蓝做主色建立「可信赖」的第一印象，薄荷绿作为成功/完成态，橙色只留给价格与紧迫信息。</div>
+
+    <div class="cols">
+      <div>
+        <p class="label">配色</p>
+        <div class="palette">
+          <div class="sw"><div class="c" style="background:#2f6bff"></div><div class="t">#2F6BFF</div></div>
+          <div class="sw"><div class="c" style="background:#12b886"></div><div class="t">#12B886</div></div>
+          <div class="sw"><div class="c" style="background:#ff7a45"></div><div class="t">#FF7A45</div></div>
+          <div class="sw"><div class="c" style="background:#f5f7fa"></div><div class="t">#F5F7FA</div></div>
+          <div class="sw"><div class="c" style="background:#1f2329"></div><div class="t">#1F2329</div></div>
+        </div>
+
+        <p class="label">字体与层级</p>
+        <div class="typescale">
+          <div><span class="n">28 / 700</span><span style="font-size:28px;font-weight:700">¥ 320</span></div>
+          <div><span class="n">18 / 600</span><span style="font-size:18px;font-weight:600">罗技 MX Master 3S</span></div>
+          <div><span class="n">14 / 400</span><span style="font-size:14px">自用半年，功能完好，配件齐全</span></div>
+          <div><span class="n">12 / 400</span><span style="font-size:12px;color:#86909c">5号楼 · 32分钟前</span></div>
+        </div>
+
+        <ul class="pros">
+          <li class="good">蓝绿对比柔和不刺眼，适合长时间浏览信息流</li>
+          <li class="good">「可信」感强，契合二手交易 / 身份认证的信任诉求</li>
+          <li class="good">大圆角 + 轻阴影，观感干净，与当下主流小程序一致</li>
+          <li class="bad">辨识度中等，容易"像别的产品"，需要靠图标/插画建立记忆点</li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="label">组件示例</p>
+        <div class="demo">
+          <div class="dchips">
+            <span class="dchip on">全部</span><span class="dchip">二手</span><span class="dchip">跑腿</span><span class="dchip">失物</span>
+          </div>
+          <div class="dcard">
+            <div class="dthumb"></div>
+            <div class="dbody">
+              <div class="dtitle">罗技 MX Master 3S</div>
+              <div class="ddesc">自用半年，功能完好</div>
+              <div class="drow"><span class="dprice">¥320</span><span class="dmeta">5号楼</span></div>
+            </div>
+          </div>
+          <div><span class="dbtn">立即联系</span> <span class="dbtn ghost">收藏</span></div>
+        </div>
+
+        <p class="label" style="margin-top:16px">整屏观感</p>
+        <div class="phone">
+          <div class="scr">
+            <div class="pnav">校集</div>
+            <div class="pbody">
+              <div class="dchips"><span class="dchip on">全部</span><span class="dchip">二手</span><span class="dchip">跑腿</span></div>
+              <div class="dcard" style="margin-bottom:8px"><div class="dthumb"></div><div class="dbody">
+                <div class="dtitle">高等数学 同济第七版</div><div class="ddesc">9成新，无笔记</div>
+                <div class="drow"><span class="dprice">¥25</span><span class="dmeta">3号楼</span></div></div></div>
+              <div class="dcard"><div class="dthumb"></div><div class="dbody">
+                <div class="dtitle">代取快递 → 7号楼</div><div class="ddesc">两个小件</div>
+                <div class="drow"><span class="dprice">¥5</span><span class="dmeta">18分钟前</span></div></div></div>
+            </div>
+            <div class="ptab"><div class="on">首页</div><div>发布</div><div>消息</div><div>我的</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 方向 B ================= -->
+  <h2>方向 B · 活力橙红（效率感）</h2>
+  <div class="board" style="--demo-brand:#ff6b35;--demo-accent:#ff6b35;--demo-bg:#fff8f3;--demo-radius:12px;
+       --demo-shadow:0 2px 6px rgba(255,107,53,.10);--demo-thumb:#ffe6d8">
+    <div class="board-hd"><h3>热烈、快节奏、行动导向</h3><span class="tag">备选</span></div>
+    <div class="pos">暖橙最能传达"现在就要"的紧迫感，适合跑腿 / 拼单这类强调时效的功能。</div>
+
+    <div class="cols">
+      <div>
+        <p class="label">配色</p>
+        <div class="palette">
+          <div class="sw"><div class="c" style="background:#ff6b35"></div><div class="t">#FF6B35</div></div>
+          <div class="sw"><div class="c" style="background:#ffb020"></div><div class="t">#FFB020</div></div>
+          <div class="sw"><div class="c" style="background:#2f6bff"></div><div class="t">#2F6BFF</div></div>
+          <div class="sw"><div class="c" style="background:#fff8f3"></div><div class="t">#FFF8F3</div></div>
+          <div class="sw"><div class="c" style="background:#2b1d14"></div><div class="t">#2B1D14</div></div>
+        </div>
+
+        <p class="label">字体与层级</p>
+        <div class="typescale">
+          <div><span class="n">28 / 700</span><span style="font-size:28px;font-weight:700;color:#ff6b35">¥ 320</span></div>
+          <div><span class="n">18 / 600</span><span style="font-size:18px;font-weight:600">罗技 MX Master 3S</span></div>
+          <div><span class="n">14 / 400</span><span style="font-size:14px">自用半年，功能完好，配件齐全</span></div>
+          <div><span class="n">12 / 400</span><span style="font-size:12px;color:#a08a7d">5号楼 · 32分钟前</span></div>
+        </div>
+
+        <ul class="pros">
+          <li class="good">行动感强，跑腿/拼单的点击转化通常更好</li>
+          <li class="good">暖底 + 深棕文字，观感温暖有校园气息</li>
+          <li class="bad">大面积为橙色时"促销感"偏重，二手交易需要的"可信感"会被削弱</li>
+          <li class="bad">橙色与红色（价格/警示）容易撞色，语义层级不好分</li>
+        </ul>
+      </div>
+      <div>
+        <p class="label">组件示例</p>
+        <div class="demo">
+          <div class="dchips"><span class="dchip on">全部</span><span class="dchip">二手</span><span class="dchip">跑腿</span></div>
+          <div class="dcard">
+            <div class="dthumb"></div>
+            <div class="dbody">
+              <div class="dtitle">罗技 MX Master 3S</div>
+              <div class="ddesc">自用半年，功能完好</div>
+              <div class="drow"><span class="dprice" style="color:#ff6b35">¥320</span><span class="dmeta">5号楼</span></div>
+            </div>
+          </div>
+          <div><span class="dbtn">立即联系</span> <span class="dbtn ghost">收藏</span></div>
+        </div>
+        <p class="label" style="margin-top:16px">整屏观感</p>
+        <div class="phone">
+          <div class="scr">
+            <div class="pnav">校集</div>
+            <div class="pbody">
+              <div class="dchips"><span class="dchip on">全部</span><span class="dchip">二手</span><span class="dchip">跑腿</span></div>
+              <div class="dcard" style="margin-bottom:8px"><div class="dthumb"></div><div class="dbody">
+                <div class="dtitle">高等数学 同济第七版</div><div class="ddesc">9成新，无笔记</div>
+                <div class="drow"><span class="dprice" style="color:#ff6b35">¥25</span><span class="dmeta">3号楼</span></div></div></div>
+              <div class="dcard"><div class="dthumb"></div><div class="dbody">
+                <div class="dtitle">代取快递 → 7号楼</div><div class="ddesc">两个小件</div>
+                <div class="drow"><span class="dprice" style="color:#ff6b35">¥5</span><span class="dmeta">18分钟前</span></div></div></div>
+            </div>
+            <div class="ptab"><div class="on">首页</div><div>发布</div><div>消息</div><div>我的</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 方向 C ================= -->
+  <h2>方向 C · 极简黑白（信息密度优先）</h2>
+  <div class="board" style="--demo-brand:#111214;--demo-accent:#ff4d4f;--demo-bg:#f7f7f8;--demo-radius:8px;
+       --demo-shadow:0 1px 2px rgba(0,0,0,.05);--demo-thumb:#ececee">
+    <div class="board-hd"><h3>克制、克制、再克制</h3><span class="tag">备选</span></div>
+    <div class="pos">几乎不用彩色，靠字号、字重、留白建立层级；适合信息量大、要走"工具感"的产品。</div>
+
+    <div class="cols">
+      <div>
+        <p class="label">配色</p>
+        <div class="palette">
+          <div class="sw"><div class="c" style="background:#111214"></div><div class="t">#111214</div></div>
+          <div class="sw"><div class="c" style="background:#ff4d4f"></div><div class="t">#FF4D4F</div></div>
+          <div class="sw"><div class="c" style="background:#f7f7f8"></div><div class="t">#F7F7F8</div></div>
+          <div class="sw"><div class="c" style="background:#ececee"></div><div class="t">#ECECEE</div></div>
+          <div class="sw"><div class="c" style="background:#6b6f76"></div><div class="t">#6B6F76</div></div>
+        </div>
+        <p class="label">字体与层级</p>
+        <div class="typescale">
+          <div><span class="n">28 / 700</span><span style="font-size:28px;font-weight:700">¥ 320</span></div>
+          <div><span class="n">18 / 600</span><span style="font-size:18px;font-weight:600">罗技 MX Master 3S</span></div>
+          <div><span class="n">14 / 400</span><span style="font-size:14px">自用半年，功能完好，配件齐全</span></div>
+          <div><span class="n">12 / 400</span><span style="font-size:12px;color:#8f959e">5号楼 · 32分钟前</span></div>
+        </div>
+        <ul class="pros">
+          <li class="good">信息密度最高，同屏能放更多条目</li>
+          <li class="good">长期迭代不容易"配色失控"，规范好维护</li>
+          <li class="bad">观感偏冷，校园产品需要的"亲和力/热闹感"不足</li>
+          <li class="bad">分类切换（二手/跑腿/失物…）缺少色彩区分，识别效率反而下降</li>
+        </ul>
+      </div>
+      <div>
+        <p class="label">组件示例</p>
+        <div class="demo">
+          <div class="dchips"><span class="dchip on">全部</span><span class="dchip">二手</span><span class="dchip">跑腿</span></div>
+          <div class="dcard">
+            <div class="dthumb"></div>
+            <div class="dbody">
+              <div class="dtitle">罗技 MX Master 3S</div>
+              <div class="ddesc">自用半年，功能完好</div>
+              <div class="drow"><span class="dprice" style="color:#111214">¥320</span><span class="dmeta">5号楼</span></div>
+            </div>
+          </div>
+          <div><span class="dbtn">立即联系</span> <span class="dbtn ghost">收藏</span></div>
+        </div>
+        <p class="label" style="margin-top:16px">整屏观感</p>
+        <div class="phone">
+          <div class="scr">
+            <div class="pnav">校集</div>
+            <div class="pbody">
+              <div class="dchips"><span class="dchip on">全部</span><span class="dchip">二手</span><span class="dchip">跑腿</span></div>
+              <div class="dcard" style="margin-bottom:8px"><div class="dthumb"></div><div class="dbody">
+                <div class="dtitle">高等数学 同济第七版</div><div class="ddesc">9成新，无笔记</div>
+                <div class="drow"><span class="dprice" style="color:#111214">¥25</span><span class="dmeta">3号楼</span></div></div></div>
+              <div class="dcard"><div class="dthumb"></div><div class="dbody">
+                <div class="dtitle">代取快递 → 7号楼</div><div class="ddesc">两个小件</div>
+                <div class="drow"><span class="dprice" style="color:#111214">¥5</span><span class="dmeta">18分钟前</span></div></div></div>
+            </div>
+            <div class="ptab"><div class="on">首页</div><div>发布</div><div>消息</div><div>我的</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 对比 ================= -->
+  <h2>三个方向横向对比</h2>
+  <table>
+    <tr><th>维度</th><th> A 清新蓝绿 <span class="tag rec">推荐</span></th><th>B 活力橙红</th><th>C 极简黑白</th></tr>
+    <tr><td>第一印象</td><td>干净、可信、像"正规平台"</td><td>热闹、急迫、像"跑腿工具"</td><td>冷静、克制、像"效率工具"</td></tr>
+    <tr><td>二手交易适配</td><td><b>好</b>（信任感强）</td><td>一般（促销感重）</td><td>较好（但偏冷）</td></tr>
+    <tr><td>跑腿/拼单适配</td><td>较好</td><td><b>好</b>（紧迫感强）</td><td>一般</td></tr>
+    <tr><td>分类识别度</td><td><b>高</b>（色相区分明显）</td><td>中（暖色系容易糊）</td><td>低</td></tr>
+    <tr><td>长期维护</td><td>好</td><td>中</td><td><b>好</b></td></tr>
+    <tr><td>校园气质</td><td><b>贴合</b></td><td>贴合</td><td>偏商务</td></tr>
+  </table>
+
+  <!-- ================= 推荐 ================= -->
+  <h2>我的推荐</h2>
+  <div class="final">
+    <h3>选 <span style="color:#2f6bff">方向 A（蓝绿）</span>，并吸收 C 的克制</h3>
+    <p style="margin:6px 0 10px">
+      理由：校集的核心是<b>「同校学生之间的信任交易」</b>——二手、跑腿、互助都建立在"对方是可信的校友"这件事上。
+      蓝色是最容易建立"正规、安全"联想的颜色；薄荷绿用来标"已完成/已认证"，语义清晰不打架。
+      只有在<b>价格</b>和<b>紧急截止时间</b>两处用橙色，形成明确的视觉焦点。
+    </p>
+    <p style="margin:0">
+      从 C 借两点：<b>① 少用阴影、多用留白</b>（卡片阴影只保留 1 层，避免"糊"）；
+      <b>② 数字用等宽</b>（价格/时间对齐更整齐）。
+    </p>
+  </div>
+
+  <h2>统一规范（三个方向都适用，先定死再动手）</h2>
+  <table>
+    <tr><th style="width:130px">项</th><th>规范</th></tr>
+    <tr><td>中文字体</td><td><code>PingFang SC / HarmonyOS Sans / Microsoft YaHei</code> 系统栈，不引入外部字体（首屏更快）</td></tr>
+    <tr><td>数字字体</td><td>价格与倒计时用 <code>tabular-nums</code> 等宽数字，避免跳动</td></tr>
+    <tr><td>字号阶梯</td><td>28/22/18/16/14/12（标题→正文→辅助），只用这 6 档，不许临时加</td></tr>
+    <tr><td>圆角</td><td>卡片 16px、按钮 10px、标签胶囊 999px、头像 50%</td></tr>
+    <tr><td>阴影</td><td>只保留 1 层：<code>0 1px 3px rgba(16,24,40,.06)</code>；浮层用 <code>0 8px 24px rgba(16,24,40,.12)</code></td></tr>
+    <tr><td>间距</td><td>4 的倍数：4 / 8 / 12 / 16 / 20 / 24 / 32，页面左右边距 16px</td></tr>
+    <tr><td>按压反馈</td><td><code>transform: scale(.97)</code> + 150ms，卡片按压透明度降到 .92</td></tr>
+    <tr><td>加载</td><td><b>骨架屏</b>优先，不用转圈；列表底部「加载中/没有更多」</td></tr>
+    <tr><td>空状态</td><td>插画 + 一句话 + 一个主按钮（如"去发布"）</td></tr>
+    <tr><td>操作反馈</td><td>轻提示 Toast（成功绿 / 失败红），不做全屏弹窗</td></tr>
+  </table>
+
+  <h2>需要你拍板的 5 件事</h2>
+  <table>
+    <tr><th style="width:150px">事项</th><th>选项</th><th>我的建议</th></tr>
+    <tr><td>① 主色调</td><td>A 蓝绿 / B 橙红 / C 黑白</td><td><b>A</b></td></tr>
+    <tr><td>② 底部 Tab</td><td>4 个（首页/发布/消息/我的）<br>5 个（首页/服务/发布/圈子/我的）</td><td><b>4 个</b>——一期没有"服务"聚合页和"圈子"，5 个会有 2 个空壳</td></tr>
+    <tr><td>③ 卡片风格</td><td>大圆角浮起 / 直角描边 / 分组列表</td><td><b>大圆角浮起</b>（16px）</td></tr>
+    <tr><td>④ 图片占位</td><td>纯色块 / 渐变块 / 公开图库真实照片</td><td><b>公开图库真实照片</b>（你要求了，我会下载到 assets 并注明来源）</td></tr>
+    <tr><td>⑤ 深色模式</td><td>做 / 不做</td><td><b>一期不做</b>——小程序深色适配成本高，收益低</td></tr>
+  </table>
+
+  <div class="foot">
+    校集 · 视觉设计方案 v1 ｜ 选定方向后我再进入页面实现（首页信息流、统一发布、二手、跑腿、技能、租赁、失物、拼单、消息、我的、订单与评价）<br>
+    本页仅为设计提案，未开始编码；选定后按此规范落地。
+  </div>
+
+</div>
+</body>
+</html>

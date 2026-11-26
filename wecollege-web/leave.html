@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>闲置买卖 · 校园生活圈</title>
+<link rel="stylesheet" href="assets/wx-base.css">
+<link rel="stylesheet" href="assets/page-leave.css">
+<link rel="stylesheet" href="assets/shell.css">
+</head>
+<body>
+<div class="app">
+  <header class="navbar">
+    <a class="nb-back" href="index.html">‹</a>
+    <span class="nb-title">闲置买卖</span>
+    <div class="capsule"><i>•••</i><span class="sep"></span><i>◎</i></div>
+  </header>
+
+  <div class="search-bar">
+    <div class="sb-input"><span class="icon-search"></span><input placeholder="搜索"></div>
+    <a class="sb-mine" href="my.html"><span class="icon-moreandroid"></span>我的</a>
+  </div>
+
+  <div class="filter-tabs">
+    <div class="ft-item ft-cate">分类<span class="caret">▾</span></div>
+    <div class="ft-item on">全部</div>
+    <div class="ft-item">出售中</div>
+    <div class="ft-item">已售出</div>
+    <div class="ft-item">最早</div>
+    <div class="ft-item">点赞数</div>
+    <div class="ft-item">收藏数</div>
+  </div>
+
+  <div class="list" id="list"></div>
+
+  <div class="post">
+    <div class="inner shadow-project" onclick="location.href='add.html?type=leave'">
+      <span class="icon-cartfill margin-right-xs"></span>发布闲置
+    </div>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script>renderLeave($('#list')); bindTabs(); mountBackTop();</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>私信 · 校集</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="appbar">
+    <a class="iconbtn" href="javascript:history.back()" aria-label="返回">
+      <svg class="ic" aria-hidden="true" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+    </a>
+    <span class="appbar-title" id="peer">林同学</span>
+    <span class="appbar-spacer"></span>
+    <a class="text-3" href="#" data-toast="举报入口：骚扰 / 诈骗 / 违规">举报</a>
+  </header>
+
+  <main class="app-main" id="scroller">
+    <a class="rowlink" href="detail.html?type=SECONDHAND&id=1">
+      <span class="media media--xs"></span>
+      <span class="grow">
+        <span style="display:block;font-size:var(--fs-13);font-weight:600">高等数学 同济第七版 上下册</span>
+        <span style="display:block;font-size:var(--fs-11);color:var(--ink-3)">二手闲置 · ¥25</span>
+      </span>
+      <svg class="ic ic--sm" style="color:var(--ink-4)" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+    </a>
+
+    <div class="chat" id="msgs"></div>
+  </main>
+
+  <div class="quickchips" id="quick"></div>
+
+  <div class="inputbar">
+    <input class="inputbar-field" id="text" placeholder="发消息…" autocomplete="off">
+    <button class="inputbar-send" id="send">发送</button>
+  </div>
+</div>
+
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/ui.js"></script>
+<script>
+(function () {
+  UI.shell();
+
+  var sid = Number(new URLSearchParams(location.search).get('id')) || 101;
+  var s = window.MOCK.sessions.filter(function (x) { return x.id === sid; })[0];
+  if (s) document.getElementById('peer').textContent = s.name;
+
+  var msgs = document.getElementById('msgs');
+  var scroller = document.getElementById('scroller');
+
+  function bubble(m) {
+    return '<div class="bubble-row' + (m.me ? ' bubble-row--me' : '') + '">'
+      + '<span class="avatar avatar--sm">' + (m.me ? '我' : (s ? s.name.charAt(0) : '对')) + '</span>'
+      + '<span class="bubble">' + UI.esc(m.text) + '</span>'
+      + '<span class="bubble-time">' + m.time + '</span>'
+      + '</div>';
+  }
+
+  function paint() {
+    msgs.innerHTML = window.MOCK.messages.map(bubble).join('');
+  }
+
+  function toBottom() {
+    scroller.scrollTop = scroller.scrollHeight;
+  }
+
+  function send() {
+    var v = document.getElementById('text').value.trim();
+    if (!v) return;
+    var d = new Date();
+    window.MOCK.messages.push({
+      me: true, text: v,
+      time: String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0')
+    });
+    document.getElementById('text').value = '';
+    paint();
+    requestAnimationFrame(toBottom);
+  }
+
+  document.getElementById('send').addEventListener('click', send);
+  document.getElementById('text').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') send();
+  });
+
+  var quick = ['还在吗？', '可以面交吗？', '什么时候方便？', '能便宜点吗'];
+  document.getElementById('quick').innerHTML = quick.map(function (q) {
+    return '<button class="chip" data-q="' + q + '">' + q + '</button>';
+  }).join('');
+  document.getElementById('quick').addEventListener('click', function (e) {
+    var b = e.target.closest('.chip');
+    if (!b) return;
+    document.getElementById('text').value = b.dataset.q;
+  });
+
+  paint();
+  window.addEventListener('load', toBottom);
+})();
+</script>
+</body>
+</html>

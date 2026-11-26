@@ -1,0 +1,195 @@
+<!-- publish页 —— 页面结构 -->
+<view class="app">
+
+  <view class="appbar" style="height:{{appbarH}}px;padding-top:{{safeTop}}px;padding-right:{{capsuleRight}}px">
+    <view class="iconbtn" hover-class="iconbtn-hv" bindtap="onBack">
+      <view class="ic ic-i-back"></view>
+    </view>
+    <text class="appbar-title">发布</text>
+  </view>
+
+  <scroll-view class="app-main" scroll-y enable-flex>
+
+    <!-- 类型选择 -->
+    <view class="section-title">选择类型</view>
+    <view class="chips chips--wrap">
+      <view
+        class="chip {{biz === item.k ? 'chip--on' : ''}}"
+        wx:for="{{bizList}}"
+        wx:key="k"
+        data-k="{{item.k}}"
+        bindtap="onBiz"
+      >{{item.short}}</view>
+    </view>
+
+    <!-- 通用字段 -->
+    <view class="section-title mt-3">基本信息</view>
+
+    <view class="field">
+      <view class="field-label">标题 <text class="req">*</text></view>
+      <input
+        class="field-control"
+        value="{{title}}"
+        maxlength="60"
+        placeholder="一句话说清楚，最多 60 字"
+        placeholder-class="ph"
+        bindinput="onTitle"
+      />
+      <view class="field-hint">请勿填写联系方式，平台内私信沟通</view>
+    </view>
+
+    <view class="field">
+      <view class="field-label">描述 <text class="req">*</text></view>
+      <textarea
+        class="field-control"
+        value="{{content}}"
+        maxlength="5000"
+        placeholder="成色、规格、面交方式等"
+        placeholder-class="ph"
+        auto-height
+        bindinput="onContent"
+      ></textarea>
+    </view>
+
+    <view class="field">
+      <view class="field-label">图片（最多 9 张）</view>
+      <view class="uploader">
+        <view
+          class="uploader-slot uploader-slot--filled img-slot"
+          wx:for="{{images}}"
+          wx:key="key"
+          data-i="{{index}}"
+          bindtap="onPreviewImage"
+        >
+          <image class="img-thumb" src="{{item.url}}" mode="aspectFill"></image>
+          <view class="img-del" data-i="{{index}}" catchtap="onRemoveImage">×</view>
+        </view>
+        <view class="uploader-slot" wx:if="{{images.length < 9}}" bindtap="onChooseImage">
+          <view class="ic ic--sm ic-i-plus"></view>
+        </view>
+      </view>
+      <view class="field-hint" wx:if="{{uploading}}">图片上传中…</view>
+    </view>
+
+    <!-- 业务线专属字段（由 JS 的 SCHEMA 驱动） -->
+    <view class="section-title mt-3">{{bizLabel}}信息</view>
+
+    <block wx:for="{{fields}}" wx:key="k">
+
+      <!-- 单行文本 -->
+      <view class="field" wx:if="{{item.type === 'text'}}">
+        <view class="field-label">{{item.label}} <text wx:if="{{item.required}}" class="req">*</text></view>
+        <input
+          class="field-control"
+          value="{{item.value}}"
+          placeholder="{{item.placeholder}}"
+          placeholder-class="ph"
+          data-i="{{index}}"
+          bindinput="onFieldInput"
+        />
+        <view class="field-hint" wx:if="{{item.hint}}">{{item.hint}}</view>
+      </view>
+
+      <!-- 数字 -->
+      <view class="field" wx:elif="{{item.type === 'number'}}">
+        <view class="field-label">{{item.label}} <text wx:if="{{item.required}}" class="req">*</text></view>
+        <input
+          class="field-control"
+          type="digit"
+          value="{{item.value}}"
+          placeholder="{{item.placeholder}}"
+          placeholder-class="ph"
+          data-i="{{index}}"
+          bindinput="onFieldInput"
+        />
+        <view class="field-hint" wx:if="{{item.hint}}">{{item.hint}}</view>
+      </view>
+
+      <!-- 分类（来自 /app/post/categories） -->
+      <view class="field" wx:elif="{{item.type === 'category'}}">
+        <view class="field-label">{{item.label}} <text class="req">*</text></view>
+        <picker
+          range="{{item.options}}"
+          range-key="label"
+          value="{{item.index}}"
+          data-i="{{index}}"
+          bindchange="onCategoryChange"
+        >
+          <view class="field-control picker-value">{{item.selected}}<view class="ic ic--sm ic-i-down picker-arrow"></view></view>
+        </picker>
+      </view>
+
+      <!-- 下拉选择 -->
+      <view class="field" wx:elif="{{item.type === 'select'}}">
+        <view class="field-label">{{item.label}} <text wx:if="{{item.required}}" class="req">*</text></view>
+        <picker
+          range="{{item.options}}"
+          range-key="label"
+          value="{{item.index}}"
+          data-i="{{index}}"
+          bindchange="onSelectChange"
+        >
+          <view class="field-control picker-value">{{item.selected}}<view class="ic ic--sm ic-i-down picker-arrow"></view></view>
+        </picker>
+      </view>
+
+      <!-- 日期 + 时间 -->
+      <view class="field" wx:elif="{{item.type === 'datetime'}}">
+        <view class="field-label">{{item.label}} <text wx:if="{{item.required}}" class="req">*</text></view>
+        <view class="dt-row">
+          <picker mode="date" value="{{item.date}}" start="{{today}}" data-i="{{index}}" bindchange="onDateChange">
+            <view class="field-control picker-value">{{item.date || '选择日期'}}</view>
+          </picker>
+          <picker mode="time" value="{{item.time}}" data-i="{{index}}" bindchange="onTimeChange">
+            <view class="field-control picker-value">{{item.time || '选择时间'}}</view>
+          </picker>
+        </view>
+      </view>
+
+      <!-- 开关 -->
+      <view class="field switch-field" wx:elif="{{item.type === 'switch'}}">
+        <view class="field-label switch-label">{{item.label}}</view>
+        <switch checked="{{item.value}}" color="#111214" data-i="{{index}}" bindchange="onSwitchChange" />
+      </view>
+
+    </block>
+
+    <!-- 其他 -->
+    <view class="section-title mt-3">其他</view>
+
+    <view class="field">
+      <view class="field-label">楼栋位置</view>
+      <input
+        class="field-control"
+        value="{{building}}"
+        placeholder="例如：3号楼 / 图书馆"
+        placeholder-class="ph"
+        bindinput="onBuilding"
+      />
+    </view>
+
+    <view class="field">
+      <view class="field-label">标签</view>
+      <input
+        class="field-control"
+        value="{{tags}}"
+        placeholder="用逗号分隔，例如：教材, 考研"
+        placeholder-class="ph"
+        bindinput="onTags"
+      />
+    </view>
+
+    <view class="notice-wrap">
+      <view class="notice notice--warn">{{noticeText}}</view>
+    </view>
+
+    <view style="height:32rpx"></view>
+  </scroll-view>
+
+  <view class="actionbar">
+    <view class="btn btn--primary btn--block" hover-class="btn-hv" bindtap="onSubmit">
+      {{submitting ? '提交中…' : '提交审核'}}
+    </view>
+  </view>
+
+</view>

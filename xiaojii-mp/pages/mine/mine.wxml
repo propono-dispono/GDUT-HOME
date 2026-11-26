@@ -1,0 +1,95 @@
+<!-- mine页 —— 页面结构 -->
+<import src="../../templates/tabbar.wxml" />
+
+<view class="app">
+
+  <view class="appbar appbar--plain" style="height:{{appbarH}}px;padding-top:{{safeTop}}px;padding-right:{{capsuleRight}}px">
+    <text class="appbar-title">我的</text>
+    <view class="appbar-spacer"></view>
+    <view class="iconbtn iconbtn--right" hover-class="iconbtn-hv" bindtap="onSettings">
+      <view class="ic ic-i-settings"></view>
+    </view>
+  </view>
+
+  <scroll-view class="app-main" scroll-y enable-flex>
+
+    <!-- 品牌区：与首页同一套扫光，字号更大，作为本页视觉焦点 -->
+    <view class="brand-hero">
+      <text class="brand brand--lg brand--cycle">GDUT-HOME</text>
+      <text class="brand-hero-sub">校园互助 · 校集</text>
+    </view>
+
+    <!-- 个人信息 -->
+    <view class="profile">
+      <image wx:if="{{me.avatar}}" class="avatar avatar--xl mine-avatar" src="{{me.avatar}}" mode="aspectFill"></image>
+      <image
+        wx:else
+        class="avatar avatar--xl"
+        src="{{me.defaultAvatar}}"
+        mode="aspectFill"
+      ></image>
+      <view class="grow">
+        <view class="profile-name">{{me.nickname}}</view>
+        <view class="profile-sub row gap-2">
+          <text class="tag {{verifyCls}}">{{verifyText}}</text>
+          <text class="ellipsis">GDUT · 信用分 {{me.creditScore}}</text>
+        </view>
+      </view>
+      <view class="btn btn--ghost btn--sm" hover-class="btn-hv" catchtap="onEditProfile">编辑</view>
+    </view>
+
+    <!-- 公开资料摘要 -->
+    <view wx:if="{{me.meta || me.intro || me.tags.length}}" class="section mine-extra">
+      <view wx:if="{{me.meta}}" class="text-3">{{me.meta}}</view>
+      <view wx:if="{{me.intro}}" class="mine-bio">{{me.intro}}</view>
+      <view wx:if="{{me.tags.length}}" class="mine-tags">
+        <text class="tag tag--outline" wx:for="{{me.tags}}" wx:key="*this">{{item}}</text>
+      </view>
+    </view>
+
+    <!-- 数据 -->
+    <view class="section">
+      <view class="stat-row">
+        <view class="stat"><view class="stat-n">{{me.postCount}}</view><view class="stat-l">发布</view></view>
+        <view class="stat"><view class="stat-n">{{me.creditScore}}</view><view class="stat-l">信用分</view></view>
+      </view>
+    </view>
+
+    <!-- B 方案已移除订单入口：小程序不再提供下单/订单能力 -->
+
+    <!-- 功能 -->
+    <view class="mt-3">
+      <view class="rowlink" hover-class="rowlink-hv" bindtap="onEditProfile">
+        <view class="rowlink-ico"><view class="ic ic-i-edit"></view></view>
+        <text class="rowlink-label">编辑资料</text>
+        <view class="rowlink-chev"><view class="ic ic--sm ic-i-chev"></view></view>
+      </view>
+      <view class="rowlink" hover-class="rowlink-hv" bindtap="onEdu">
+        <view class="rowlink-ico"><view class="ic ic-i-doc"></view></view>
+        <text class="rowlink-label">教务中心</text>
+        <text class="rowlink-value">课表 · 成绩 · 考试</text>
+        <view class="rowlink-chev"><view class="ic ic--sm ic-i-chev"></view></view>
+      </view>
+      <view class="rowlink" hover-class="rowlink-hv" bindtap="onVerify">
+        <view class="rowlink-ico"><view class="ic ic-i-shield"></view></view>
+        <text class="rowlink-label">校园认证</text>
+        <text class="rowlink-value">{{me.verifyStatus === 2 ? '已认证' : ''}}</text>
+        <view class="rowlink-chev"><view class="ic ic--sm ic-i-chev"></view></view>
+      </view>
+      <view class="rowlink" hover-class="rowlink-hv" bindtap="onMyPosts">
+        <view class="rowlink-ico"><view class="ic ic-i-file"></view></view>
+        <text class="rowlink-label">我的发布</text>
+        <view class="rowlink-chev"><view class="ic ic--sm ic-i-chev"></view></view>
+      </view>
+      <view class="rowlink" hover-class="rowlink-hv" bindtap="onFav">
+        <view class="rowlink-ico"><view class="ic ic-i-star"></view></view>
+        <text class="rowlink-label">我的收藏</text>
+        <view class="rowlink-chev"><view class="ic ic--sm ic-i-chev"></view></view>
+      </view>
+    </view>
+
+    <view class="text-3 mine-foot">校集 · 小程序端 v0.1 · 数据来自本地后端</view>
+  </scroll-view>
+
+  <template is="tabbar" data="{{active: 'mine', unread: unreadCount}}" />
+</view>

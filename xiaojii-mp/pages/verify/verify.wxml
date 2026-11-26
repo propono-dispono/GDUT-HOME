@@ -1,0 +1,104 @@
+<!-- 校园认证 —— 页面结构 -->
+<view class="app">
+
+  <view class="appbar" style="height:{{appbarH}}px;padding-top:{{safeTop}}px;padding-right:{{capsuleRight}}px">
+    <view class="iconbtn" hover-class="iconbtn-hv" bindtap="onBack">
+      <view class="ic ic-i-back"></view>
+    </view>
+    <text class="appbar-title">校园认证</text>
+  </view>
+
+  <scroll-view class="app-main" scroll-y enable-flex>
+
+    <!-- 当前状态 -->
+    <view class="section">
+      <view class="profile">
+        <view class="avatar avatar--xl"><view class="ic ic-i-shield"></view></view>
+        <view class="grow">
+          <view class="profile-name">{{statusTitle}}</view>
+          <view class="profile-sub">{{statusDesc}}</view>
+        </view>
+        <text class="tag {{statusTagCls}}">{{statusTag}}</text>
+      </view>
+    </view>
+
+    <!-- 驳回原因 -->
+    <view class="notice-wrap" wx:if="{{rejectReason}}">
+      <view class="notice notice--warn">驳回原因：{{rejectReason}}</view>
+    </view>
+
+    <!-- 已提交过的信息（脱敏） -->
+    <block wx:if="{{maskedNo}}">
+      <view class="section-title mt-3">已提交信息</view>
+      <view class="kvlist">
+        <view class="kv"><text class="kv-k">学号</text><text class="kv-v">{{maskedNo}}</text></view>
+        <view class="kv"><text class="kv-k">姓名</text><text class="kv-v">{{maskedName}}</text></view>
+        <view class="kv" wx:if="{{submittedAt}}"><text class="kv-k">提交时间</text><text class="kv-v">{{submittedAt}}</text></view>
+        <view class="kv" wx:if="{{reviewedAt}}"><text class="kv-k">审核时间</text><text class="kv-v">{{reviewedAt}}</text></view>
+      </view>
+    </block>
+
+    <!-- 可提交时显示表单 -->
+    <block wx:if="{{canSubmit}}">
+      <block wx:if="{{maskedNo}}"><view class="section-title mt-3">重新提交</view></block>
+
+      <view class="field">
+        <view class="field-label">学号 <text class="req">*</text></view>
+        <input
+          class="field-control"
+          value="{{studentNo}}"
+          maxlength="20"
+          placeholder="例如：3123001234"
+          placeholder-class="ph"
+          bindinput="onStudentNo"
+        />
+        <view class="field-hint">学号全局唯一，一个学号只能绑定一个账号</view>
+      </view>
+
+      <view class="field">
+        <view class="field-label">真实姓名 <text class="req">*</text></view>
+        <input
+          class="field-control"
+          value="{{realName}}"
+          maxlength="32"
+          placeholder="需与校园卡一致"
+          placeholder-class="ph"
+          bindinput="onRealName"
+        />
+      </view>
+
+      <view class="field">
+        <view class="field-label">校园卡照片 <text class="req">*</text></view>
+        <view class="uploader">
+          <view
+            class="uploader-slot uploader-slot--filled img-slot"
+            wx:if="{{cardImage.url}}"
+            bindtap="onPreviewCard"
+          >
+            <image class="img-thumb" src="{{cardImage.url}}" mode="aspectFill"></image>
+            <view class="img-del" catchtap="onRemoveCard">×</view>
+          </view>
+          <view class="uploader-slot" wx:else bindtap="onChooseCard">
+            <view class="ic ic--sm ic-i-image"></view>
+          </view>
+        </view>
+        <view class="field-hint" wx:if="{{uploading}}">上传中…</view>
+        <view class="field-hint" wx:else>请拍摄校园卡正面，照片仅用于人工审核</view>
+      </view>
+
+      <view class="notice-wrap">
+        <view class="notice">认证信息仅用于核实校内身份，审核通过后不支持自行修改。请勿上传他人证件。</view>
+      </view>
+      <view style="height:32rpx"></view>
+    </block>
+
+    <view wx:if="{{!canSubmit}}" style="height:24rpx"></view>
+  </scroll-view>
+
+  <view class="actionbar" wx:if="{{canSubmit}}">
+    <view class="btn btn--primary btn--block" hover-class="btn-hv" bindtap="onSubmit">
+      {{submitting ? '提交中…' : '提交认证'}}
+    </view>
+  </view>
+
+</view>

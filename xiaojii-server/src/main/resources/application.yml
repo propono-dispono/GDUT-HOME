@@ -1,0 +1,188 @@
+# ============================================================
+# 校集 · 广东工业大学 校园互助平台 - 服务端配置
+#
+# 【连接信息通过环境变量注入，不要把真实密码写进本文件】
+# 已留空的项（DB_PASSWORD / REDIS_PASSWORD / WX_APPID / WX_SECRET）
+# 等服务器配置好后，用环境变量或启动参数传入即可，无需改代码。
+# ============================================================
+server:
+  # 用 XIAOJII_PORT 而不是 SERVER_PORT：后者是很多宿主环境预置的变量，
+  # 会被意外注入导致端口被改（实测被改到 56449 并撞车）
+  port: ${XIAOJII_PORT:8080}
+  # 全局路径前缀：接口实际地址为 http://localhost:8080/api/...
+  servlet:
+    context-path: /api
+  tomcat:
+    # 单机 2C4G 场景，线程数不用给太大，避免上下文切换开销
+    threads:
+      max: 200
+      min-spare: 20
+
+spring:
+  application:
+    name: xiaojii-server
+
+  # ---------- MySQL（Docker 容器内） ----------
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # ⚠️ 这是【生产模板】的占位默认值：本机 3306 是已停用的宿主 MySQL，连不上是正常的。
+    #    本地开发必须用 profile=local（走 SSH 隧道 13307），见 application-local.yml
+    #    生产环境通过 DB_URL 环境变量覆盖（容器内用 mysql 容器名）
+    url: ${DB_URL:jdbc:mysql://127.0.0.1:3306/xiaojii?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true}
+    # 2026-10-18 起全站统一账号 root（原 app / blog_app / xiaojii_app 均已 DROP）
+    username: ${DB_USERNAME:root}
+    # 【留空待配置】root 密码必须由环境变量注入，不要写进本文件
+    password: ${DB_PASSWORD:}
+    hikari:
+      # 连接池：小团队 10 个连接足够，别调大（MySQL 默认 max_connections=151）
+      minimum-idle: 5
+      maximum-pool-size: 10
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      # 启动时不主动探测数据库，便于在数据库未就绪时也能起服务看接口文档
+      initialization-fail-timeout: -1
+
+  # ---------- Redis（Docker 容器内） ----------
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      # 【留空待配置】
+      password: ${REDIS_PASSWORD:}
+      database: ${REDIS_DATABASE:0}
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
+
+  # 时间格式统一，避免前端拿到时间戳
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+    # null 字段也输出（默认 always）。
+    # 不选 non_null 的原因：前端按字段是否存在做分支判断时，
+    # "字段缺失"与"字段为 null"是两种语义，缺失会导致 undefined 参与字符串拼接。
+    default-property-inclusion: always
+
+  # 上传大小限制：前端压缩后单张 <300KB，留足余量
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 30MB
+
+  # 静态资源：把上传目录挂到 /files/**（实际地址 /api/files/**）
+  web:
+    resources:
+      static-locations: classpath:/static/
+
+# ---------- MyBatis-Plus ----------
+mybatis-plus:
+  # XML 位置（复杂查询用，简单查询走 BaseMapper 不需要写 XML）
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.gdut.xiaojii.entity
+  configuration:
+    # 下划线转驼峰：user_id -> userId
+    map-underscore-to-camel-case: true
+    # 开发期打印 SQL，上线前改成 org.apache.ibatis.logging.nologging.NoLoggingImpl
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    banner: false
+    db-config:
+      # 主键自增
+      id-type: auto
+      # 逻辑删除：只有 post 表有 deleted 字段，实体上需显式 @TableLogic
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# ---------- 业务自定义配置 ----------
+xiaojii:
+  # 消息队列（Redis Stream 实现，见 common/mq/RedisStreamMessageQueue）
+  #
+  # 【为什么用 Redis 而不是 RocketMQ】项目本来就要用 Redis 做限流和 token 白名单，
+  #   引 Stream 零新增中间件；RocketMQ 要多跑 NameServer + Broker（默认 1G 堆），
+  #   而本项目的量级是"每天几百条通知"，用它证明不了选型能力。
+  #   换实现只需换一个 MessageQueue 实现类，业务代码不动。
+  mq:
+    # 总开关。本地调试如果不想跑 Redis Stream，置 false（消息会丢，只用于纯接口调试）
+    enabled: true
+    # 一次最多取几条：10 条 ≈ 一次处理 10 条通知，够快又不会让单次循环太久
+    batch-size: 10
+    # 没消息时阻塞多久（毫秒）。2000 = 挂起 2 秒，避免 while 空转打爆 Redis
+    block-ms: 2000
+    # 失败重试上限，超过进死信 mq:{topic}:dlq
+    max-retry: 3
+    # pending 消息空闲多久算"上一个消费者挂了"，可以重新领取。60 秒是经验值：
+    # 太短会抢走正在处理的消息（重复劳动），太长会让崩溃后的补投延迟很久
+    pending-idle-ms: 60000
+    # 多久复查一次 pending。默认 30 秒。
+    # 线上排障时可临时调成 1000，几秒内就能看到"重投 → 再失败 → 进死信"的完整过程
+    recover-interval-ms: 30000
+  # JWT 配置
+  jwt:
+    # 必须 >= 32 字节，否则启动时直接报错（HS256 的硬要求）
+    # 生产环境务必通过环境变量 JWT_SECRET 覆盖
+    secret: ${JWT_SECRET:xiaojii-gdut-campus-dev-only-secret-key-change-me-2026}
+    # 有效期：7 天（单位秒）
+    expire-seconds: ${JWT_EXPIRE_SECONDS:604800}
+    # 管理端令牌有效期：12 小时（后台会话不宜过长）
+    admin-expire-seconds: ${JWT_ADMIN_EXPIRE_SECONDS:43200}
+    # 请求头名称
+    header: Authorization
+    # 令牌前缀
+    prefix: "Bearer "
+
+  # 微信小程序配置
+  wx:
+    # 【留空待配置】未配置时只能用 /app/auth/dev-login 调试
+    appid: ${WX_APPID:}
+    secret: ${WX_SECRET:}
+    # 本地开发开关：true 时 /app/auth/dev-login 可用（跳过微信换取 openid）
+    # ⚠️ 上线前必须改成 false，否则任何人都能伪造登录
+    dev-login-enabled: ${WX_DEV_LOGIN:true}
+    # 微信接口地址（一般不用改）
+    jscode2session-url: https://api.weixin.qq.com/sns/jscode2session
+
+  # 文件上传（本地磁盘，后续可换 COS/MinIO）
+  upload:
+    # 物理存储目录，相对路径基于启动目录
+    base-dir: ${UPLOAD_DIR:./uploads}
+    # 对外访问前缀（Nginx / 反向代理需要对齐）
+    public-base: ${UPLOAD_PUBLIC_BASE:http://localhost:8080/api/files}
+    # 单文件大小上限（字节），与 spring.servlet.multipart.max-file-size 对齐
+    max-size: 5242880
+    # 允许的扩展名
+    allow-ext: jpg,jpeg,png,webp
+
+  # 内容审核开关：接入微信 security.msgSecCheck 后打开
+  audit:
+    machine-enabled: ${AUDIT_MACHINE_ENABLED:false}
+
+# ---------- 接口文档 ----------
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+  default-flat-param-object: true
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+    swagger-model-name: 数据模型
+
+# ---------- 教务接入 ----------
+edu:
+  base-url: ${EDU_BASE_URL:https://jxfw.gdut.edu.cn}
+  # 32 字节 base64，用于 AES-GCM 加密保存的教务密码；生产写在 /opt/xiaojii/.env
+  cred-key: ${EDU_CRED_KEY:}
+
+# ---------- 日志 ----------
+logging:
+  level:
+    root: info
+    com.gdut.xiaojii: debug

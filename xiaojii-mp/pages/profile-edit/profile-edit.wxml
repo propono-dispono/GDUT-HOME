@@ -1,0 +1,159 @@
+<!-- 编辑资料 —— 页面结构 -->
+<view class="app">
+
+  <view class="appbar" style="height:{{appbarH}}px;padding-top:{{safeTop}}px;padding-right:{{capsuleRight}}px">
+    <view class="iconbtn" hover-class="iconbtn-hv" bindtap="onBack">
+      <view class="ic ic-i-back"></view>
+    </view>
+    <text class="appbar-title">编辑资料</text>
+  </view>
+
+  <scroll-view class="app-main" scroll-y enable-flex>
+
+    <!-- 头像 -->
+    <view class="avatar-wrap">
+      <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+        <image wx:if="{{avatar}}" class="avatar avatar--xl avatar-img" src="{{avatar}}" mode="aspectFill"></image>
+        <image
+          wx:else
+          class="avatar avatar--xl"
+          src="{{defaultAvatar}}"
+          mode="aspectFill"
+        ></image>
+      </button>
+      <view class="avatar-tip">{{uploading ? '上传中…' : '点击更换头像'}}</view>
+    </view>
+
+    <view class="section-title">基本信息</view>
+
+    <view class="field">
+      <view class="field-label">昵称 <text class="req">*</text></view>
+      <input class="field-control" value="{{nickname}}" maxlength="32" placeholder="你的昵称" placeholder-class="ph" bindinput="onNickname" />
+    </view>
+
+    <view class="field">
+      <view class="field-label">性别</view>
+      <picker mode="selector" range="{{genderOptions}}" value="{{genderIndex}}" bindchange="onGender">
+        <view class="picker-value">
+          <text>{{genderOptions[genderIndex]}}</text>
+          <view class="ic ic--sm ic-i-chev picker-arrow"></view>
+        </view>
+      </picker>
+    </view>
+
+    <view class="field">
+      <view class="field-label">生日</view>
+      <picker mode="date" start="1990-01-01" end="{{today}}" value="{{birthday}}" bindchange="onBirthday">
+        <view class="picker-value">
+          <text class="{{birthday ? '' : 'text-4'}}">{{birthday || '选择生日'}}</text>
+          <text class="text-3" wx:if="{{age}}">{{age}} 岁</text>
+          <view class="ic ic--sm ic-i-chev picker-arrow"></view>
+        </view>
+      </picker>
+      <view class="field-hint">只用于计算年龄，不会公开生日</view>
+    </view>
+
+    <view class="field">
+      <view class="field-label">个性签名</view>
+      <textarea
+        class="field-control field-textarea"
+        value="{{intro}}"
+        maxlength="200"
+        auto-height
+        placeholder="一句话介绍自己，比如：在准备考研，随缘接单"
+        placeholder-class="ph"
+        bindinput="onIntro"
+      ></textarea>
+      <view class="field-hint">{{intro.length}}/200</view>
+    </view>
+
+    <view class="section-title mt-3">校园信息</view>
+
+    <view class="field">
+      <view class="field-label">专业</view>
+      <input class="field-control" value="{{major}}" maxlength="40" placeholder="例如：计算机科学与技术" placeholder-class="ph" bindinput="onMajor" />
+    </view>
+
+    <view class="field">
+      <view class="field-label">年级</view>
+      <picker mode="selector" range="{{gradeOptions}}" value="{{gradeIndex}}" bindchange="onGrade">
+        <view class="picker-value">
+          <text>{{gradeIndex > 0 ? gradeOptions[gradeIndex] + ' 级' : '未选择'}}</text>
+          <view class="ic ic--sm ic-i-chev picker-arrow"></view>
+        </view>
+      </picker>
+    </view>
+
+    <view class="field">
+      <view class="field-label">学院</view>
+      <input class="field-control" value="{{college}}" maxlength="40" placeholder="例如：计算机学院" placeholder-class="ph" bindinput="onCollege" />
+    </view>
+
+    <view class="field">
+      <view class="field-label">校区</view>
+      <picker mode="selector" range="{{campusOptions}}" value="{{campusIndex}}" bindchange="onCampus">
+        <view class="picker-value">
+          <text>{{campusIndex > 0 ? campusOptions[campusIndex] : '未选择'}}</text>
+          <view class="ic ic--sm ic-i-chev picker-arrow"></view>
+        </view>
+      </picker>
+    </view>
+
+    <view class="section-title mt-3">个性标签</view>
+
+    <view class="field">
+      <view class="field-label">可互助时间</view>
+      <picker mode="selector" range="{{timeOptions}}" value="{{timeIndex}}" bindchange="onTime">
+        <view class="picker-value">
+          <text>{{timeIndex > 0 ? timeOptions[timeIndex] : '未选择'}}</text>
+          <view class="ic ic--sm ic-i-chev picker-arrow"></view>
+        </view>
+      </picker>
+    </view>
+
+    <view class="field">
+      <view class="field-label">爱好 / 技能 <text class="text-3">最多 6 个</text></view>
+      <view class="chip-wrap">
+        <view
+          class="chip {{item.on ? 'chip--on' : ''}}"
+          hover-class="chip-hv"
+          wx:for="{{tagList}}"
+          wx:key="name"
+          data-i="{{index}}"
+          bindtap="onTag"
+        >{{item.name}}</view>
+      </view>
+    </view>
+
+    <view class="field">
+      <view class="field-label">想找什么 <text class="text-3">最多 6 个</text></view>
+      <view class="chip-wrap">
+        <view
+          class="chip {{item.on ? 'chip--on' : ''}}"
+          hover-class="chip-hv"
+          wx:for="{{lookingList}}"
+          wx:key="name"
+          data-i="{{index}}"
+          bindtap="onLooking"
+        >{{item.name}}</view>
+      </view>
+    </view>
+
+    <view class="section-title mt-3">公开范围</view>
+    <view class="field">
+      <view class="field-hint" style="margin-bottom:8rpx">昵称、头像、签名、认证和信用分始终公开；下面这些可以逐项开关。</view>
+      <view class="switch-row" wx:for="{{privacyFields}}" wx:key="key">
+        <text class="switch-row-label">{{item.label}}</text>
+        <view class="switch {{item.value ? 'switch--on' : ''}}" data-i="{{index}}" bindtap="onPrivacyTap"></view>
+      </view>
+    </view>
+
+    <view class="save-wrap">
+      <view class="btn btn--primary btn--block {{saving ? 'is-disabled' : ''}}" hover-class="btn-hv" bindtap="onSave">
+        {{saving ? '保存中…' : '保存资料'}}
+      </view>
+    </view>
+
+  </scroll-view>
+
+</view>
