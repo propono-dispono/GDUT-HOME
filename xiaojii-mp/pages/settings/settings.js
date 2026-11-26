@@ -77,8 +77,8 @@ Page({
   // 事件处理：About
   onAbout() {
     wx.showModal({
-      title: '关于校集',
-      content: '校集 · 广工校园互助平台\n版本 ' + this.data.version + '\n\n仅提供信息展示与私信联系，不涉及任何在线支付。',
+      title: '关于 GDUT-HOME',
+      content: 'GDUT-HOME · 广工校园互助平台\n版本 ' + this.data.version + '\n\n仅提供信息展示与私信联系，不涉及任何在线支付。',
       showCancel: false,
       confirmText: '知道了'
     })

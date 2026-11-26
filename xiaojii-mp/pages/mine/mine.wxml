@@ -16,7 +16,7 @@
     <!-- 品牌区：与首页同一套扫光，字号更大，作为本页视觉焦点 -->
     <view class="brand-hero">
       <text class="brand brand--lg brand--cycle">GDUT-HOME</text>
-      <text class="brand-hero-sub">校园互助 · 校集</text>
+      <text class="brand-hero-sub">校园互助 · GDUT-HOME</text>
     </view>
 
     <!-- 个人信息 -->
@@ -88,7 +88,7 @@
       </view>
     </view>
 
-    <view class="text-3 mine-foot">校集 · 小程序端 v0.1 · 数据来自本地后端</view>
+    <view class="text-3 mine-foot">GDUT-HOME · 小程序端 v0.1 · 数据来自本地后端</view>
   </scroll-view>
 
   <template is="tabbar" data="{{active: 'mine', unread: unreadCount}}" />
